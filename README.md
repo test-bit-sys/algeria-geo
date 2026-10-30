@@ -1,7 +1,9 @@
 <a id="top"></a>
 
 <p align="right">
-  <strong><a href="#english">English</a></strong> &nbsp;|&nbsp; <strong><a href="#arabic">العربية</a></strong>
+  <strong>English</strong> &nbsp;|&nbsp;
+  <a href="./README.ar.md">العربية</a> &nbsp;|&nbsp;
+  <a href="./README.fr.md">Français</a>
 </p>
 
 <div align="center">
@@ -44,12 +46,10 @@
 - [Data Distributions (JSON, CSV, SQL)](#data-distributions)
 - [Data Source & Provenance](#data-source--provenance)
 - [Building from Source](#building-from-source)
-- [النسخة العربية (Arabic Version)](#arabic)
+- [Contributing](#contributing)
 - [License](#license)
 
 ---
-
-<a id="english"></a>
 
 ## Features
 
@@ -112,7 +112,7 @@ poetry add algeria-geo
 
 ### TypeScript / JavaScript
 
-Works in Node.js, Bun, Deno, Next.js, Nuxt, Vite, and browser bundlers:
+Works seamlessly across Node.js, Bun, Deno, Next.js, Nuxt, Vite, and browser bundlers:
 
 ```ts
 import {
@@ -126,7 +126,7 @@ import {
   toDropdownOptions,
 } from "algeria-geo";
 
-// 1. Direct lookups
+// 1. Direct lookups by code or multilingual name
 const alger = getWilaya(16); // or getWilaya("16") or getWilaya("الجزائر")
 console.log(alger?.name_fr); // "Alger"
 console.log(alger?.communes_count); // 57
@@ -161,7 +161,7 @@ const options = toDropdownOptions("ar");
 ```python
 import algeria_geo as geo
 
-# 1. Direct lookups
+# 1. Direct lookups by code or multilingual name
 alger = geo.get_wilaya(16)  # accepts int or str: "16", "Alger", "الجزائر"
 print(alger.name_ar)         # "الجزائر"
 print(alger.communes_count)  # 57
@@ -186,7 +186,7 @@ res = geo.search("Ouargla")
 print(res.wilayas[0].item.name_ar)  # "ورقلة"
 print(res.best.score)               # 1.0
 
-# 6. JSON serialization for FastAPI / Django
+# 6. JSON serialization for FastAPI / Django / Flask
 import json
 print(json.dumps(commune.to_dict(), ensure_ascii=False))
 
@@ -284,161 +284,15 @@ python scripts/build.py
 
 ---
 
-<p align="right"><a href="#arabic">الانتقال إلى النسخة العربية</a> &nbsp;·&nbsp; <a href="#top">Back to top ↑</a></p>
+## Contributing
+
+Contributions are welcome! Please check [CONTRIBUTING.md](CONTRIBUTING.md) for data citation guidelines, local testing instructions, and pull request requirements.
 
 ---
 
-<a id="arabic"></a>
+## License
 
-## النسخة العربية
+This project is licensed under the [MIT License](LICENSE).  
+The administrative dataset is in the public domain under [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/).
 
-<div dir="rtl">
-
-### نبذة عن المشروع
-
-`algeria-geo` هي المكتبة المعيارية الشاملة والمفتوحة المصدر للاستعلام والبحث في **التقسيم الإداري للجمهورية الجزائرية الديمقراطية الشعبية**، وتتميز بانعدام أي اعتماديات تشغيل خارجية (Zero Runtime Dependencies).
-
-توفر المكتبة واجهتين متطابقتين برمجياً لكل من **Python** و**TypeScript / JavaScript**، وتتيح الوصول السريع إلى بيانات:
-- **69 ولاية** (تتضمن التقسيم الإداري الجديد لعام 2026: الولايات 59 إلى 69).
-- **538 دائرة**.
-- **1,541 بلدية**.
-- الاستعلام التاريخي وفق حقب التقسيم: **48 ولاية** (1984)، **58 ولاية** (2019)، و**69 ولاية** (2026).
-
----
-
-### المميزات الرئيسية
-
-- ⚡ **أداء فائق وبلا اعتماديات**: بحث واستعلام في الذاكرة بتعقيد زمني $O(1)$ مع استهلاك طفيف للموارد.
-- 🔍 **بحث تقريبي ذكي عابر للغات**: يتعامل مع التشكيل والتنوين والهمزات، والحركات الصوتية اللاتينية، واختلافات النقل الحرفي (مثل: `Ouargla` و`Warqla` و`ورقلة`).
-- ⏳ **دعم الحقب الإدارية التاريخية**: إمكانية استخراج حدود وبلديات الولايات كما كانت في عام 1984 أو 2019 أو التقسيم الحالي.
-- 🗄️ **توزيعات جاهزة متعددة الصيغ**: ملفات SQL جاهزة للاستيراد في قواعد بيانات PostgreSQL وSQLite وMySQL، بالإضافة إلى ملفات CSV وJSON المصغرة وشجرة هرمية كاملة.
-- 🎯 **تطابق تام بين المنصتين**: توفير الدوال والنماذج نفسها في لغتي TypeScript وPython.
-
----
-
-### التثبيت
-
-#### في بيئة Node.js و TypeScript:
-
-```bash
-npm install algeria-geo
-```
-
-#### في بيئة Python:
-
-```bash
-pip install algeria-geo
-```
-
----
-
-### أمثلة الاستخدام السريع
-
-#### استخدام TypeScript / JavaScript:
-
-```ts
-import {
-  getWilaya,
-  getDaira,
-  getCommune,
-  getWilayaByPhoneCode,
-  getWilayaByCommune,
-  search,
-  toDropdownOptions,
-} from "algeria-geo";
-
-// الاستعلام عن ولاية بالرمز أو الاسم
-const alger = getWilaya(16);
-console.log(alger?.name_ar); // "الجزائر"
-console.log(alger?.communes_count); // 57
-
-// الاستعلام عن دائرة وبلدية
-console.log(getDaira("0301")?.name_ar); // "الأغواط"
-console.log(getCommune("0319")?.name_ar); // "أفلو"
-
-// معرفة الولاية التابعة لها بلدية (حالياً وسابقاً)
-console.log(getWilayaByCommune("0319", 69)?.name_ar); // "أفلو" (ضمن ولايات 69)
-console.log(getWilayaByCommune("0319", 58)?.name_ar); // "الأغواط" (ضمن ولايات 58)
-
-// البحث بالرمز الهاتفي
-console.log(getWilayaByPhoneCode("021")?.name_ar); // "الجزائر"
-
-// البحث التقريبي الذكي
-const results = search("ورقلة");
-console.log(results.wilayas[0]?.item.name_fr); // "Ouargla"
-
-// توليد خيارات قوائم الاختيار (Select Dropdown)
-const options = toDropdownOptions("ar");
-// [{ value: "01", label: "أدرار" }, { value: "02", label: "الشلف" }, ...]
-```
-
-#### استخدام Python:
-
-```python
-import algeria_geo as geo
-
-# الاستعلام عن ولاية بالرقم أو الاسم
-alger = geo.get_wilaya(16)
-print(alger.name_ar)         # "الجزائر"
-print(alger.communes_count)  # 57
-
-# الاستعلام عن دائرة أو بلدية
-print(geo.get_daira("0301").name_ar)    # "الأغواط"
-print(geo.get_commune("0319").name_ar)  # "أفلو"
-
-# الاستعلام العكسي للولاية التابعة لها بلدية عبر الحقب
-print(geo.get_wilaya_by_commune("0319", era=69).name_ar)  # "أفلو"
-print(geo.get_wilaya_by_commune("0319", era=58).name_ar)  # "الأغواط"
-
-# البحث بالرمز الهاتفي
-print(geo.get_wilaya_by_phone_code("021").name_ar)  # "الجزائر"
-
-# البحث الذكي متعدد اللغات
-results = geo.search("Ouargla")
-print(results.wilayas[0].item.name_ar)  # "ورقلة"
-
-# التحويل إلى قاموس (Dict / JSON) لتطبيقات الويب (FastAPI / Django)
-print(alger.to_dict())
-```
-
----
-
-### جدول الواجهة البرمجية (API)
-
-| دالة Python | دالة TypeScript | الغرض والوظيفة |
-|---|---|---|
-| `get_wilaya(id, era=69)` | `getWilaya(id, era = 69)` | جلب ولاية بالرمز الرقمي أو بالاسم (عربي / فرنسي) |
-| `get_wilayas(era=69)` | `getWilayas(era = 69)` | عرض قائمة الولايات التابعة لحقبة إدارية معينة |
-| `get_daira(code)` | `getDaira(code)` | جلب دائرة برمزها الرباعي |
-| `get_dairas(wilaya_code, era=69)` | `getDairas(wilayaCode, era = 69)` | جلب جميع الدوائر التابعة لولاية محددة |
-| `get_all_dairas(era=69)` | `getAllDairas(era = 69)` | عرض جميع دوائر القطر الجزائري في حقبة معينة |
-| `get_commune(code)` | `getCommune(code)` | جلب بلدية برمز ONS الرباعي |
-| `get_communes(wilaya_code, era=69)`| `getCommunes(wilayaCode, era = 69)`| جلب جميع بلديات ولاية محددة |
-| `get_all_communes(era=69)` | `getAllCommunes(era = 69)` | عرض جميع بلديات القطر الجزائري في حقبة معينة |
-| `get_communes_by_daira(daira_code)`| `getCommunesByDaira(dairaCode)` | جلب البلديات التابعة لدائرة معينة |
-| `get_wilaya_by_commune(code, era=69)`| `getWilayaByCommune(code, era = 69)`| معرفة الولاية التي تنتمي إليها بلدية معينة |
-| `get_wilaya_by_phone_code(phone)` | `getWilayaByPhoneCode(phone)` | جلب الولاية انطلاقاً من رمز الهاتف الثابت |
-| `search(query, lang, limit)` | `search(query, langOrOptions, limit)` | بحث تقريبي ذكي في الولايات والدوائر والبلديات |
-| `to_dropdown_options(lang, era)` | `toDropdownOptions(lang, era)` | تجهيز مصفوفة خيارات لقوائم الاختيار في واجهات الويب |
-
----
-
-### ملفات التوزيع الجاهزة
-
-تتوفر جميع المخرجات في مجلد [`dist/`](dist/):
-- **قواعد البيانات**: ملفات SQL جاهزة لـ PostgreSQL وSQLite وMySQL 8 / MariaDB.
-- **جداول بيانات**: ملفات CSV مجهزة بترميز UTF-8 مع BOM لضمان التوافق مع Excel.
-- **تنسيق JSON**: ملفات مصغرة ومهيأة للدمج المباشر وشجرة كاملة متداخلة (ولاية ➔ دائرة ➔ بلدية).
-
----
-
-### الترخيص
-
-- الكود المصدري للمكتبة منشور تحت رخصة **MIT**.
-- البيانات الإدارية الأساسية منقولة عن نصوص رسمية موثقة في الجريدة الرسمية للجمهورية الجزائرية، وهي تحت رخصة المشاع الإبداعي **CC0 1.0 Universal**.
-
-</div>
-
----
-
-<p align="right"><a href="#english">English</a> &nbsp;·&nbsp; <a href="#top">الرجوع لأعلى الصفحة ↑</a></p>
+<p align="right"><a href="#top">Back to top ↑</a></p>

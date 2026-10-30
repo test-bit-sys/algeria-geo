@@ -1,0 +1,28 @@
+[build-system]
+requires = ["hatchling>=1.21"]
+build-backend = "hatchling.build"
+
+[project]
+name = "algeria-geo"
+version = "1.0.0"
+description = "Algeria's administrative divisions: 69 wilayas, 538 dairas and 1,541 communes, with Arabic/French search and historical boundaries."
+requires-python = ">=3.10"
+license = { text = "MIT" }
+dependencies = []
+keywords = ["algeria", "wilaya", "daira", "commune", "administrative-divisions", "geodata", "geography", "arabic", "python"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Typing :: Typed",
+]
+
+[project.optional-dependencies]
+test = ["pytest>=7"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/algeria_geo"]
+
+[tool.hatch.build.targets.sdist]
+include = ["src/algeria_geo", "tests"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

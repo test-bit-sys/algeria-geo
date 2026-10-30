@@ -9,6 +9,7 @@ description = "Algeria's administrative divisions: 69 wilayas, 538 dairas and 1,
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
+authors = [{ name = "Safouane (@safouanedz1)" }]
 dependencies = []
 keywords = [
   "algeria",

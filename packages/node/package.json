@@ -4,6 +4,7 @@
   "description": "Algeria's administrative divisions: 69 wilayas, 538 dairas and 1,541 communes, with Arabic/French search and historical boundaries.",
   "type": "module",
   "sideEffects": false,
+  "author": "Safouane (@safouanedz1)",
   "license": "MIT",
   "repository": {
     "type": "git",

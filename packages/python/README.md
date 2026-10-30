@@ -29,6 +29,12 @@
   [![TypeScript](https://img.shields.io/badge/typescript-ready-3178C6?logo=typescript&logoColor=white)](https://www.npmjs.com/package/algeria-geo/)
   [![Runtime Dependencies](https://img.shields.io/badge/runtime%20deps-0-brightgreen.svg)](#features)
 
+  <br/>
+
+  [![Telegram Channel](https://img.shields.io/badge/Telegram_Channel-Join-2CA5E0?logo=telegram&logoColor=white)](https://t.me/+WeiJNOn1gJkzNzFk)
+  [![Telegram](https://img.shields.io/badge/Telegram-@safouanedz1-2CA5E0?logo=telegram&logoColor=white)](https://t.me/safouanedz1)
+  [![Discord](https://img.shields.io/badge/Discord-bin4ary-5865F2?logo=discord&logoColor=white)](https://discord.com)
+
 </div>
 
 ---

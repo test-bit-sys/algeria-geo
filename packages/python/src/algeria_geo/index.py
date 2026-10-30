@@ -64,6 +64,13 @@ def to_code(identifier: Any) -> Optional[str]:
     return s.zfill(2) if re.fullmatch(r"\d{1,2}", s) else None
 
 
+def to_daira_code(identifier: Any) -> Optional[str]:
+    if isinstance(identifier, bool):
+        return None
+    s = str(identifier).strip()
+    return s.zfill(4) if re.fullmatch(r"\d{1,4}", s) else None
+
+
 def check_era(era: int) -> None:
     if era not in ERAS:
         raise ValueError(f"era must be one of {ERAS}, got {era!r}")
@@ -73,23 +80,33 @@ class GeoIndex:
     def __init__(self, wilayas: Sequence[Wilaya], dairas: Sequence[Daira],
                  communes: Sequence[Commune]) -> None:
         self.wilayas: Tuple[Wilaya, ...] = tuple(sorted(wilayas, key=lambda w: w.code))
+        self.dairas: Tuple[Daira, ...] = tuple(sorted(dairas, key=lambda d: d.code))
+        self.communes: Tuple[Commune, ...] = tuple(sorted(communes, key=lambda c: c.code))
+
         self.wilaya_by_code: Dict[str, Wilaya] = {w.code: w for w in self.wilayas}
-        self.daira_by_code: Dict[str, Daira] = {d.code: d for d in dairas}
-        self.commune_by_code: Dict[str, Commune] = {c.code: c for c in communes}
+        self.daira_by_code: Dict[str, Daira] = {d.code: d for d in self.dairas}
+        self.commune_by_code: Dict[str, Commune] = {c.code: c for c in self.communes}
 
         d_acc: Dict[Tuple[int, str], List[Daira]] = {}
         c_acc: Dict[Tuple[int, str], List[Commune]] = {}
-        for d in sorted(dairas, key=lambda x: x.code):
+        for d in self.dairas:
             for era, w in ((69, d.wilaya_code), (58, d.wilaya_code_58), (48, d.wilaya_code_48)):
                 d_acc.setdefault((era, w), []).append(d)
-        for c in sorted(communes, key=lambda x: x.code):
+        for c in self.communes:
             for era, w in ((69, c.wilaya_code), (58, c.wilaya_code_58), (48, c.wilaya_code_48)):
                 c_acc.setdefault((era, w), []).append(c)
         self.dairas_by_era: Dict[Tuple[int, str], Tuple[Daira, ...]] = {k: tuple(v) for k, v in d_acc.items()}
         self.communes_by_era: Dict[Tuple[int, str], Tuple[Commune, ...]] = {k: tuple(v) for k, v in c_acc.items()}
 
+        c_daira_acc: Dict[str, List[Commune]] = {}
+        for c in self.communes:
+            if c.daira_code:
+                c_daira_acc.setdefault(c.daira_code, []).append(c)
+        self.communes_by_daira: Dict[str, Tuple[Commune, ...]] = {k: tuple(v) for k, v in c_daira_acc.items()}
+
         self.wilaya_by_name: Dict[str, Wilaya] = {}
         self.wilaya_by_phon: Dict[str, List[Wilaya]] = {}
+        self.wilaya_by_phone: Dict[str, Wilaya] = {}
         for w in self.wilayas:
             for lang in _LANGS:
                 raw = getattr(w, f"name_{lang}")
@@ -97,17 +114,21 @@ class GeoIndex:
                 bucket = self.wilaya_by_phon.setdefault(phonetic_key(raw), [])
                 if w not in bucket:
                     bucket.append(w)
+            if w.phone_code:
+                self.wilaya_by_phone[w.phone_code] = w
+                if w.phone_code.startswith("0"):
+                    self.wilaya_by_phone[w.phone_code[1:]] = w
 
         self.commune_by_name: Dict[str, List[Commune]] = {}
-        for c in sorted(communes, key=lambda x: x.code):
+        for c in self.communes:
             for lang in _LANGS:
                 bucket = self.commune_by_name.setdefault(normalize(getattr(c, f"name_{lang}")), [])
                 if c not in bucket:
                     bucket.append(c)
 
         self._w_entries = tuple(_entry(w) for w in self.wilayas)
-        self._d_entries = tuple(_entry(d) for d in sorted(dairas, key=lambda x: x.code))
-        self._c_entries = tuple(_entry(c) for c in sorted(communes, key=lambda x: x.code))
+        self._d_entries = tuple(_entry(d) for d in self.dairas)
+        self._c_entries = tuple(_entry(c) for c in self.communes)
 
     @classmethod
     def load(cls) -> "GeoIndex":
@@ -140,15 +161,53 @@ class GeoIndex:
         check_era(era)
         return [w for w in self.wilayas if int(w.code) <= era]
 
+    def get_daira(self, code: Identifier) -> Optional[Daira]:
+        c = to_daira_code(code)
+        return self.daira_by_code.get(c) if c else None
+
     def get_dairas(self, wilaya_code: Identifier, era: int = 69) -> List[Daira]:
         check_era(era)
         code = to_code(wilaya_code)
         return list(self.dairas_by_era.get((era, code), ())) if code and int(code) <= era else []
 
+    def get_all_dairas(self, era: int = 69) -> List[Daira]:
+        check_era(era)
+        return [
+            d for d in self.dairas
+            if int(d.wilaya_code_48 if era == 48 else d.wilaya_code_58 if era == 58 else d.wilaya_code) <= era
+        ]
+
+    def get_commune(self, code: Identifier) -> Optional[Commune]:
+        c = to_daira_code(code)
+        return self.commune_by_code.get(c) if c else None
+
     def get_communes(self, wilaya_code: Identifier, era: int = 69) -> List[Commune]:
         check_era(era)
         code = to_code(wilaya_code)
         return list(self.communes_by_era.get((era, code), ())) if code and int(code) <= era else []
+
+    def get_all_communes(self, era: int = 69) -> List[Commune]:
+        check_era(era)
+        return [
+            c for c in self.communes
+            if int(c.wilaya_code_48 if era == 48 else c.wilaya_code_58 if era == 58 else c.wilaya_code) <= era
+        ]
+
+    def get_communes_by_daira(self, daira_code: Identifier) -> List[Commune]:
+        code = to_daira_code(daira_code)
+        return list(self.communes_by_daira.get(code, ())) if code else []
+
+    def get_wilaya_by_phone_code(self, phone_code: Union[str, int]) -> Optional[Wilaya]:
+        s = str(phone_code).strip()
+        return self.wilaya_by_phone.get(s)
+
+    def get_wilaya_by_commune(self, commune_code: Identifier, era: int = 69) -> Optional[Wilaya]:
+        check_era(era)
+        c = self.get_commune(commune_code)
+        if c is None:
+            return None
+        w_code = c.wilaya_code_48 if era == 48 else c.wilaya_code_58 if era == 58 else c.wilaya_code
+        return self.get_wilaya(w_code, era=era)
 
     def search(self, query: str, lang: str = "any", limit: int = 20) -> SearchResult:
         if lang != "any" and lang not in _LANGS:

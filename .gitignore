@@ -1,10 +1,33 @@
+# Build outputs and distributions
 dist/
+packages/node/dist/
+packages/node/src/data.ts
+packages/python/src/algeria_geo/data/
+*.egg-info/
+build/
+
+# Node
 node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.tgz
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
 .pytest_cache/
+.coverage
+htmlcov/
 .venv/
 venv/
-__pycache__/
-*.egg-info/
-packages/python/src/algeria_geo/data/
-packages/node/src/data.ts
-packages/node/dist/
+env/
+
+# IDE & OS
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db

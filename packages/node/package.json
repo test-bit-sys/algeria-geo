@@ -1,6 +1,6 @@
 {
   "name": "algeria-geo",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Algeria's administrative divisions: 69 wilayas, 538 dairas and 1,541 communes, with Arabic/French search and historical boundaries.",
   "type": "module",
   "sideEffects": false,
@@ -10,13 +10,31 @@
   "types": "./dist/types/index.d.ts",
   "exports": {
     ".": {
-      "import": { "types": "./dist/types/index.d.ts", "default": "./dist/esm/index.js" },
-      "require": { "types": "./dist/types/index.d.ts", "default": "./dist/cjs/index.js" }
+      "import": {
+        "types": "./dist/types/index.d.ts",
+        "default": "./dist/esm/index.js"
+      },
+      "require": {
+        "types": "./dist/types/index.d.ts",
+        "default": "./dist/cjs/index.js"
+      }
     },
     "./package.json": "./package.json"
   },
-  "files": ["dist"],
-  "keywords": ["algeria", "wilaya", "daira", "commune", "administrative-divisions", "geodata", "geography", "arabic", "typescript"],
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "algeria",
+    "wilaya",
+    "daira",
+    "commune",
+    "administrative-divisions",
+    "geodata",
+    "geography",
+    "arabic",
+    "typescript"
+  ],
   "scripts": {
     "clean": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\"",
     "build": "npm run clean && tsc -p tsconfig.esm.json && tsc -p tsconfig.cjs.json && node scripts/postbuild.mjs",
@@ -25,6 +43,6 @@
     "size": "node scripts/size.mjs"
   },
   "devDependencies": {
-    "typescript": "^6.0.0"
+    "typescript": "^5.8.0"
   }
 }

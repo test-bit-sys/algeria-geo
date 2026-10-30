@@ -4,16 +4,42 @@ build-backend = "hatchling.build"
 
 [project]
 name = "algeria-geo"
-version = "1.0.0"
+version = "1.1.0"
 description = "Algeria's administrative divisions: 69 wilayas, 538 dairas and 1,541 communes, with Arabic/French search and historical boundaries."
+readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
 dependencies = []
-keywords = ["algeria", "wilaya", "daira", "commune", "administrative-divisions", "geodata", "geography", "arabic", "python"]
+keywords = [
+  "algeria",
+  "wilaya",
+  "daira",
+  "commune",
+  "administrative-divisions",
+  "geodata",
+  "geography",
+  "arabic",
+  "python",
+]
 classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
   "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Scientific/Engineering :: GIS",
+  "Topic :: Software Development :: Libraries :: Python Modules",
   "Typing :: Typed",
 ]
+
+[project.urls]
+Homepage = "https://github.com/djazairdev/algeria-geo"
+Repository = "https://github.com/djazairdev/algeria-geo"
+Issues = "https://github.com/djazairdev/algeria-geo/issues"
 
 [project.optional-dependencies]
 test = ["pytest>=7"]

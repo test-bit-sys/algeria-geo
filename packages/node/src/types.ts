@@ -51,6 +51,11 @@ export interface SearchResult {
   readonly communes: readonly Match<Commune>[];
 }
 
+export interface SearchOptions {
+  readonly lang?: SearchLang;
+  readonly limit?: number;
+}
+
 export interface DropdownOption {
   readonly value: string;
   readonly label: string;

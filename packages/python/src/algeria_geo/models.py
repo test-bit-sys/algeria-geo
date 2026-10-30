@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Generic, Literal, Optional, Tuple, TypeVar
+from typing import Any, Dict, Generic, Literal, Optional, Tuple, TypeVar
 
 Lang = Literal["ar", "fr", "en"]
 Era = Literal[48, 58, 69]
@@ -33,6 +33,19 @@ class Wilaya(_Named):
     is_new_wilaya: bool
     era: int
 
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "code": self.code,
+            "name_ar": self.name_ar,
+            "name_fr": self.name_fr,
+            "name_en": self.name_en,
+            "dairas_count": self.dairas_count,
+            "communes_count": self.communes_count,
+            "phone_code": self.phone_code,
+            "is_new_wilaya": self.is_new_wilaya,
+            "era": self.era,
+        }
+
 
 @dataclass(frozen=True, slots=True)
 class Daira(_Named):
@@ -43,6 +56,17 @@ class Daira(_Named):
     name_en: str
     wilaya_code_58: str
     wilaya_code_48: str
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "code": self.code,
+            "wilaya_code": self.wilaya_code,
+            "name_ar": self.name_ar,
+            "name_fr": self.name_fr,
+            "name_en": self.name_en,
+            "wilaya_code_58": self.wilaya_code_58,
+            "wilaya_code_48": self.wilaya_code_48,
+        }
 
 
 @dataclass(frozen=True, slots=True)
@@ -59,12 +83,34 @@ class Commune(_Named):
     wilaya_code_58: str
     wilaya_code_48: str
 
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "code": self.code,
+            "daira_code": self.daira_code,
+            "wilaya_code": self.wilaya_code,
+            "name_ar": self.name_ar,
+            "name_fr": self.name_fr,
+            "name_en": self.name_en,
+            "post_code": self.post_code,
+            "latitude": self.latitude,
+            "longitude": self.longitude,
+            "wilaya_code_58": self.wilaya_code_58,
+            "wilaya_code_48": self.wilaya_code_48,
+        }
+
 
 @dataclass(frozen=True)
 class Match(Generic[T]):
     item: T
     score: float
     field: str
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "item": self.item.to_dict() if hasattr(self.item, "to_dict") else self.item,
+            "score": self.score,
+            "field": self.field,
+        }
 
 
 @dataclass(frozen=True)
@@ -81,3 +127,11 @@ class SearchResult:
     def best(self) -> Optional[Match]:
         every = (*self.wilayas, *self.dairas, *self.communes)
         return max(every, key=lambda m: m.score, default=None)
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "query": self.query,
+            "wilayas": [m.to_dict() for m in self.wilayas],
+            "dairas": [m.to_dict() for m in self.dairas],
+            "communes": [m.to_dict() for m in self.communes],
+        }

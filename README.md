@@ -1,3 +1,7 @@
+<a id="top"></a>
+
+<p align="right"><a href="#english">English</a> | <a href="#arabic">العربية</a></p>
+
 <div align="center">
 
 # 🇩🇿 algeria-geo
@@ -5,158 +9,208 @@
 **Algeria's 69 wilayas, 538 dairas and 1,541 communes, with Arabic/French search and historical boundaries for Python and TypeScript.**
 
 [![PyPI](https://img.shields.io/pypi/v/algeria-geo?logo=pypi)](https://pypi.org/project/algeria-geo/)
-[![npm](https://img.shields.io/npm/v/algeria-geo?logo=npm)](https://www.npmjs.com/package/algeria-geo)
+[![npm](https://img.shields.io/npm/v/algeria-geo?logo=npm)](https://www.npmjs.com/package/algeria-geo/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 ![Python](https://img.shields.io/badge/python-3.10%2B-blue)
 ![TypeScript](https://img.shields.io/badge/types-included-3178c6)
 ![Dependencies](https://img.shields.io/badge/runtime%20deps-0-brightgreen)
 
-[English](#english) · [العربية](#العربية)
-
 </div>
 
----
+<a id="english"></a>
 
 ## English
 
-### Data status
+### Overview
 
-| Layer | Status |
-|---|---|
-| 69 wilayas (AR / FR / EN, era flags) | ✅ included; codes 59–69 follow Presidential Decree 26-206 |
-| Dairas and communes | ✅ 538 dairas and 1,541 communes, including the 2026 reorganization and 48/58/69-era wilaya lineage |
-| Postal codes and GPS | ⚠️ fields and API are ready, but these records are not included in the cited official-text dataset |
+`algeria-geo` is a zero-runtime-dependency library for looking up and searching Algeria's administrative divisions. Python and TypeScript expose matching APIs, typed records, Arabic/French names, and historical views of the 48-, 58-, and 69-wilaya boundaries.
 
-### Quickstart
+| Data | Coverage |
+|---|---:|
+| Wilayas | 69 |
+| Dairas | 538 |
+| Communes | 1,541 |
+
+Names are provided in Arabic and French. The `name_en` field is an ASCII-friendly form derived from the French name, not an English translation. Postal-code and coordinate fields are part of the schema but currently `null` because the pinned administrative source does not provide those records.
+
+### Install
 
 **Node.js**
+
 ```bash
-npm i algeria-geo
-```
-```js
-import { getWilaya, search } from "algeria-geo";
-console.log(getWilaya(69)?.name_fr, search("Warqla").wilayas[0]?.item.name_ar);
+npm install algeria-geo
 ```
 
 **Python**
+
 ```bash
 pip install algeria-geo
 ```
+
+### Quick start
+
+**TypeScript / JavaScript**
+
+```ts
+import { getCommune, getCommunes, search } from "algeria-geo";
+
+console.log(getCommune("0319")?.name_ar); // أفلو
+console.log(getCommune("0319")?.wilaya_code); // 59
+console.log(getCommunes("03", 58).length); // communes in the 58-wilaya view
+console.log(search("Warqla").wilayas[0]?.item.name_ar); // ورقلة
+```
+
+**Python**
+
 ```python
 import algeria_geo as geo
-print(geo.get_wilaya(69).name_fr, geo.search("Warqla").wilayas[0].item.name_ar)
+
+print(geo.get_commune("0319").name_ar)  # أفلو
+print(geo.get_commune("0319").wilaya_code)  # 59
+print(len(geo.get_communes("03", era=58)))
+print(geo.search("Warqla").wilayas[0].item.name_ar)  # ورقلة
 ```
 
-### API (identical in both languages)
+### API
 
-| Python | TypeScript | Notes |
+| Python | TypeScript | Purpose |
 |---|---|---|
-| `get_wilaya(id, era=69)` | `getWilaya(id, era = 69)` | code (`16`, `"16"`) or name in ar/fr/en, transliteration-tolerant |
-| `get_wilayas(era=69)` | `getWilayas(era)` | |
-| `get_dairas(code, era=69)` | `getDairas(code, era)` | |
-| `get_communes(code, era=69)` | `getCommunes(code, era)` | `era` selects the territorial definition |
-| `search(query, lang="any")` | `search(query, lang)` | scored fuzzy match across Arabic and Latin scripts |
-| `get_postal_code(name)` | `getPostalCode(name)` | Returns a code only when postal-code data is populated |
-| `to_dropdown_options(lang="ar")` | `toDropdownOptions(lang)` | `[{value, label}]` |
+| `get_wilaya(id, era=69)` | `getWilaya(id, era = 69)` | Look up a wilaya by code or Arabic/French name |
+| `get_wilayas(era=69)` | `getWilayas(era)` | List wilayas in a boundary era |
+| `get_dairas(code, era=69)` | `getDairas(code, era)` | List a wilaya's dairas |
+| `get_communes(code, era=69)` | `getCommunes(code, era)` | List a wilaya's communes |
+| `get_commune(code)` | `getCommune(code)` | Look up a commune by ONS code |
+| `search(query, lang="any")` | `search(query, lang)` | Fuzzy search across wilayas, dairas and communes |
+| `get_postal_code(name)` | `getPostalCode(name)` | Look up a postal code when postal data is populated |
+| `to_dropdown_options(lang="ar")` | `toDropdownOptions(lang)` | Create wilaya select options |
 
-Search combines accent and diacritic folding, Arabic letter unification, a drop of the `ال` prefix and a shared phonetic key, so `Ouargla`, `Warqla` and `ورقلة` resolve to the same wilaya.
+`era` can be `48`, `58`, or `69`. Search folds accents and Arabic diacritics, unifies common Arabic letter variants, and tolerates transliteration differences. For example, `Ouargla`, `Warqla`, and `ورقلة` find the same wilaya.
 
-### Comparison
+### Data and boundaries
 
-| | **algeria-geo** | `othmanus/algeria-cities` |
-|---|---|---|
-| Wilayas | **69** (+ 58 / 48 era views) | 48 (frozen) |
-| PyPI / npm packages | ✅ / ✅ | ❌ |
-| Postal code and GPS fields | ⚠️ schema is ready; values are not in the current dataset | ❌ |
-| Integrity validation (orphans, formats, GPS bounds) | ✅ | ❌ |
-| SQL (PostgreSQL / MySQL / SQLite), CSV, JSON, tree | ✅ | partial |
-| Types | frozen dataclasses, strict `.d.ts` | none |
+The canonical data is pinned to [djazairdev/wilayas](https://github.com/djazairdev/wilayas/tree/0b3b6ab2ac1b1569469285d8fe5e7df18666fcdf), a CC0 dataset transcribed from cited texts in Algeria's Journal officiel. The 2026 reorganization is represented in the current 69-wilaya view; `wilaya_code_58` and `wilaya_code_48` preserve the earlier assignments for migration and historical queries.
+
+Sixty communes have no daira assignment in the cited records, so their `daira_code` is `null`. Postal codes and latitude/longitude are not included in this source and remain `null`; `get_postal_code` therefore returns no result until a verified postal dataset is added.
 
 ### Build from source
+
 ```bash
-python scripts/build.py --check     # validate canonical data
-python scripts/build.py             # dist/, SQL, CSV, package data
-python scripts/build.py --strict    # also require dairas, communes, postal codes and GPS
+python scripts/build.py --check
+python scripts/build.py
 ```
-Outputs: `dist/wilayas.min.json`, `communes.min.json`, `dairas.min.json`, `tree.min.json`, `dist/csv/*.csv`, `dist/algeria_geo.sql` (PostgreSQL and SQLite), `dist/algeria_geo.mysql.sql`.
 
-Refresh the administrative dataset with `python scripts/import_source.py`, then rebuild. The importer pins [djazairdev/wilayas](https://github.com/djazairdev/wilayas) to a source revision based on the Journal officiel (data license: CC0 1.0). Commune codes remain the ONS codes; 60 communes have no daira in the cited texts, so their `daira_code` is `null`. Postal codes and coordinates remain `null` until a verifiable source is added.
+To refresh the administrative source and rebuild:
 
-### Migrating from 58 to 69 wilayas
+```bash
+python scripts/import_source.py
+python scripts/build.py
+```
 
-1. **Nothing is removed.** Codes `01`–`58` are unchanged; `59`–`69` are new (`is_new_wilaya: true`).
-2. **Pin the old view** with `era=58` (or `48`) to keep legacy behaviour: `get_communes("17", era=58)` still returns every commune Djelfa had before the split.
-3. **Communes moved.** In era 69, communes of new wilayas leave their parent. Each record keeps `wilaya_code_58` and `wilaya_code_48`, so you can migrate stored data by mapping the old code to the new `wilaya_code`.
-4. **Aggregations change.** Counts per wilaya (`communes_count`) differ in era 69 for the parents: Laghouat, Batna, Biskra, Tébessa, Tlemcen, Tiaret, Djelfa, Médéa, M'Sila, El Bayadh. Verify the exact parents against the decree.
-5. **UI selects:** `to_dropdown_options()` now returns 69 entries.
-6. **Vehicle plates and external codes** for 59–69 apply from 1 January 2027. Don't assume they match your own legacy systems.
-
-| Code | Wilaya |
-|---|---|
-| 59 | Aflou (آفلو) |
-| 60 | Barika (بريكة) |
-| 61 | El Kantara (القنطرة) |
-| 62 | Bir El Ater (بئر العاتر) |
-| 63 | El Aricha (العريشة) |
-| 64 | Ksar Chellala (قصر الشلالة) |
-| 65 | Aïn Oussera (عين وسارة) |
-| 66 | Messaad (مسعد) |
-| 67 | Ksar El Boukhari (قصر البخاري) |
-| 68 | Bou Saâda (بوسعادة) |
-| 69 | El Abiodh Sidi Cheikh (الأبيض سيدي الشيخ) |
-
-Codes 64–66 are inferred; sources disagree on the numbering. Edit `data/wilayas.json` if the official decree differs.
+`--strict` also requires postal codes and coordinates to be populated. Build outputs include minified JSON, CSV, a nested tree, and SQL for PostgreSQL, SQLite, and MySQL.
 
 ### License
-MIT.
 
----
+Library code is MIT. The imported administrative dataset is CC0 1.0; see the linked source for its citations and data terms.
+
+<p align="right"><a href="#arabic">العربية</a> · <a href="#top">Back to top</a></p>
+
+<a id="arabic"></a>
 
 ## العربية
 
 <div dir="rtl">
 
-### حالة البيانات
+### نبذة
 
-| الطبقة | الحالة |
-|---|---|
-| الولايات الـ 69 (عربي / فرنسي / إنجليزي مع علامات الحقبة) | ✅ متوفرة، وأرقام 59–69 بانتظار التحقق النهائي من الجريدة الرسمية |
-| الدوائر والبلديات | ✅ 538 دائرة و1541 بلدية، مع تحديث 2026 وعلاقات الولايات في الحقب 48 و58 و69 |
-| الرموز البريدية والإحداثيات | ⚠️ الحقول والواجهة جاهزة، لكن المصدر الرسمي المستورد لا يتضمن هذه البيانات |
+`algeria-geo` مكتبة بلا اعتماديات وقت التشغيل للبحث والاستعلام عن التقسيم الإداري في الجزائر. توفر واجهتين متقاربتين لـPython وTypeScript، وسجلات مكتوبة الأنواع، وأسماء بالعربية والفرنسية، وإمكانية الاستعلام وفق حدود الولايات في الحقب 48 و58 و69.
 
-لتحديث بيانات التقسيم الإداري شغّل `python scripts/import_source.py` ثم أعد البناء. يعتمد المستورد على [djazairdev/wilayas](https://github.com/djazairdev/wilayas)، المثبت على نسخة موثقة من نصوص الجريدة الرسمية (البيانات بترخيص CC0 1.0). تحتفظ البلديات برموز ONS، و60 بلدية لا تتبع دائرة في المصدر؛ لذلك تكون قيمة `daira_code` لها `null`.
+| البيانات | العدد |
+|---|---:|
+| الولايات | 69 |
+| الدوائر | 538 |
+| البلديات | 1541 |
 
-### البدء السريع
+الأسماء متوفرة بالعربية والفرنسية. الحقل `name_en` صيغة لاتينية ASCII مشتقة من الاسم الفرنسي، وليس ترجمة إنجليزية. حقول الرمز البريدي والإحداثيات موجودة في المخطط، لكن قيمها `null` حالياً لأن مصدر التقسيم المثبت لا يتضمنها.
+
+### التثبيت
 
 **Node.js**
+
 ```bash
-npm i algeria-geo
-```
-```js
-import { getWilaya, search } from "algeria-geo";
-console.log(getWilaya(69)?.name_ar, search("Warqla").wilayas[0]?.item.name_ar);
+npm install algeria-geo
 ```
 
 **Python**
+
 ```bash
 pip install algeria-geo
 ```
+
+### بدء سريع
+
+**TypeScript / JavaScript**
+
+```ts
+import { getCommune, getCommunes, search } from "algeria-geo";
+
+console.log(getCommune("0319")?.name_ar); // أفلو
+console.log(getCommune("0319")?.wilaya_code); // 59
+console.log(getCommunes("03", 58).length); // البلديات ضمن تقسيم 58 ولاية
+console.log(search("Warqla").wilayas[0]?.item.name_ar); // ورقلة
+```
+
+**Python**
+
 ```python
 import algeria_geo as geo
-print(geo.get_wilaya(69).name_ar, geo.search("Warqla").wilayas[0].item.name_ar)
+
+print(geo.get_commune("0319").name_ar)  # أفلو
+print(geo.get_commune("0319").wilaya_code)  # 59
+print(len(geo.get_communes("03", era=58)))
+print(geo.search("Warqla").wilayas[0].item.name_ar)  # ورقلة
 ```
 
 ### الواجهة البرمجية
 
-الدوال متطابقة في اللغتين: `get_wilaya` و`get_communes` و`search` و`get_postal_code` و`to_dropdown_options` (وفي TypeScript: `getWilaya` وغيرها). يقبل البحث الأحرف العربية واللاتينية ويتسامح مع اختلافات النقل الحرفي، فـ `Ouargla` و`Warqla` و`ورقلة` تُرجع الولاية نفسها.
+| Python | TypeScript | الوظيفة |
+|---|---|---|
+| `get_wilaya(id, era=69)` | `getWilaya(id, era = 69)` | جلب ولاية بالرمز أو بالاسم العربي/الفرنسي |
+| `get_wilayas(era=69)` | `getWilayas(era)` | عرض الولايات وفق حقبة التقسيم |
+| `get_dairas(code, era=69)` | `getDairas(code, era)` | عرض دوائر الولاية |
+| `get_communes(code, era=69)` | `getCommunes(code, era)` | عرض بلديات الولاية |
+| `get_commune(code)` | `getCommune(code)` | جلب بلدية برمز ONS |
+| `search(query, lang="any")` | `search(query, lang)` | بحث تقريبي في الولايات والدوائر والبلديات |
+| `get_postal_code(name)` | `getPostalCode(name)` | جلب الرمز البريدي عند توفر بياناته |
+| `to_dropdown_options(lang="ar")` | `toDropdownOptions(lang)` | تجهيز خيارات قائمة الولايات |
 
-### الانتقال من 58 إلى 69 ولاية
+تقبل `era` القيم `48` أو `58` أو `69`. يطوي البحث اختلافات التشكيل واللكنات، ويوحّد بعض أشكال الحروف العربية، ويتسامح مع اختلافات النقل الحرفي. لذلك تؤدي `Ouargla` و`Warqla` و`ورقلة` إلى الولاية نفسها.
 
-1. **لا يُحذف شيء:** الرموز `01`–`58` كما هي، و`59`–`69` جديدة (`is_new_wilaya: true`).
-2. **للإبقاء على السلوك القديم** استخدم `era=58` (أو `48`).
-3. **انتقال البلديات:** في حقبة 69 تخرج بلديات الولايات الجديدة من ولاياتها الأم؛ يحتفظ كل سجل بالحقلين `wilaya_code_58` و`wilaya_code_48` لتسهيل ترحيل بياناتك المخزنة.
-4. **تتغيّر الإحصاءات** للولايات الأم (الأغواط، باتنة، بسكرة، تبسة، تلمسان، تيارت، الجلفة، المدية، المسيلة، البيض). تحقق من الولايات الأم بدقة من المرسوم.
-5. **القوائم المنسدلة:** تُرجع `to_dropdown_options()` الآن 69 عنصراً.
-6. **ترقيم المركبات** للولايات 59–69 يسري اعتباراً من 1 جانفي 2027.
+### البيانات والحقب
+
+البيانات الأساسية مثبتة على [djazairdev/wilayas](https://github.com/djazairdev/wilayas/tree/0b3b6ab2ac1b1569469285d8fe5e7df18666fcdf)، وهي مجموعة بترخيص CC0 منقولة عن نصوص موثقة في الجريدة الرسمية الجزائرية. يتضمن العرض الحالي إعادة التنظيم الإداري لعام 2026؛ ويحفظ الحقلان `wilaya_code_58` و`wilaya_code_48` الولايات السابقة لتسهيل الترحيل والاستعلام التاريخي.
+
+ستون بلدية لا تتبع دائرة في السجلات المعتمدة، لذلك تكون قيمة `daira_code` لديها `null`. لا يتضمن هذا المصدر الرموز البريدية أو الإحداثيات، وتبقى قيمها `null` إلى حين إضافة مصدر موثوق؛ لذلك لن يعيد `get_postal_code` نتيجة حالياً.
+
+### البناء من المصدر
+
+```bash
+python scripts/build.py --check
+python scripts/build.py
+```
+
+لتحديث بيانات التقسيم ثم إعادة البناء:
+
+```bash
+python scripts/import_source.py
+python scripts/build.py
+```
+
+يتطلب الخيار `--strict` أيضاً توفر الرموز البريدية والإحداثيات. تشمل مخرجات البناء JSON مصغراً وCSV وشجرة متداخلة وملفات SQL لـPostgreSQL وSQLite وMySQL.
+
+### الترخيص
+
+كود المكتبة بترخيص MIT. مجموعة البيانات المستوردة بترخيص CC0 1.0؛ راجع المصدر المرتبط للاطلاع على المراجع وشروط البيانات.
 
 </div>
+
+<p align="right"><a href="#english">English</a> · <a href="#top">أعلى الصفحة</a></p>

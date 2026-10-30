@@ -11,7 +11,7 @@ Contributions are welcome! Whether you are reporting an erratum in administrativ
 ### Local Setup & Building
 1. Clone the repository:
    ```bash
-   git clone https://github.com/djazairdev/algeria-geo.git
+   git clone https://github.com/test-bit-sys/algeria-geo.git
    cd algeria-geo
    ```
 2. Validate the canonical dataset:

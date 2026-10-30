@@ -26,6 +26,7 @@ __all__ = [
     "get_wilaya",
     "get_wilaya_by_commune",
     "get_wilaya_by_phone_code",
+    "get_wilayas_by_phone_code",
     "get_wilayas",
     "search",
     "to_dropdown_options",
@@ -77,6 +78,11 @@ def get_all_communes(era: int = 69) -> List[Commune]:
 def get_communes_by_daira(daira_code: Identifier) -> List[Commune]:
     """List all communes belonging to a specific daira."""
     return default_index().get_communes_by_daira(daira_code)
+
+
+def get_wilayas_by_phone_code(phone_code: Union[str, int]) -> List[Wilaya]:
+    """Look up all wilayas sharing a telephone area code (e.g. '025' or '25')."""
+    return default_index().get_wilayas_by_phone_code(phone_code)
 
 
 def get_wilaya_by_phone_code(phone_code: Union[str, int]) -> Optional[Wilaya]:

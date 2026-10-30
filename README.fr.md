@@ -8,7 +8,7 @@
 
 <div align="center">
 
-  <a href="https://github.com/djazairdev/algeria-geo">
+  <a href="https://github.com/test-bit-sys/algeria-geo">
     <img src="assets/logo.png" alt="Logo algeria-geo" width="720" style="border-radius: 16px; max-width: 100%; box-shadow: 0 10px 30px rgba(0,0,0,0.3);" />
   </a>
 
@@ -21,7 +21,7 @@
 
   <br/>
 
-  [![CI](https://github.com/djazairdev/algeria-geo/actions/workflows/ci.yml/badge.svg)](https://github.com/djazairdev/algeria-geo/actions/workflows/ci.yml)
+  [![CI](https://github.com/test-bit-sys/algeria-geo/actions/workflows/ci.yml/badge.svg)](https://github.com/test-bit-sys/algeria-geo/actions/workflows/ci.yml)
   [![PyPI](https://img.shields.io/pypi/v/algeria-geo?logo=pypi&color=blue)](https://pypi.org/project/algeria-geo/)
   [![npm](https://img.shields.io/npm/v/algeria-geo?logo=npm&color=red)](https://www.npmjs.com/package/algeria-geo/)
   [![Licence : MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
@@ -71,7 +71,7 @@
 | **Communes** | **1 541** | `0101` à `6912` (Code ONS à 4 chiffres) | Arabe, Français, Romanisé ASCII |
 
 > [!NOTE]
-> Les noms sont fournis en arabe (`name_ar`) et en français (`name_fr`). Le champ `name_en` correspond à une translittération ASCII dérivée de la graphie officielle. Les codes postaux et coordonnées GPS sont réservés dans le schéma et actuellement fixés à `null` en attente de validation officielle.
+> Les noms sont fournis en arabe (`name_ar`) et en français (`name_fr`). Le champ `name_en` correspond à une translittération ASCII dérivée de la graphie officielle. Les codes postaux officiels à 5 chiffres (`post_code`) et les coordonnées GPS (`latitude`, `longitude`) sont vérifiés et disponibles pour les 1 541 communes. Les indicatifs téléphoniques régionaux (`phone_code`) sont renseignés pour l'ensemble des 69 wilayas.
 
 ---
 

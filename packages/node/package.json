@@ -5,6 +5,14 @@
   "type": "module",
   "sideEffects": false,
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/test-bit-sys/algeria-geo.git"
+  },
+  "homepage": "https://github.com/test-bit-sys/algeria-geo#readme",
+  "bugs": {
+    "url": "https://github.com/test-bit-sys/algeria-geo/issues"
+  },
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
   "types": "./dist/types/index.d.ts",

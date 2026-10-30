@@ -8,7 +8,7 @@
 
 <div align="center">
 
-  <a href="https://github.com/djazairdev/algeria-geo">
+  <a href="https://github.com/test-bit-sys/algeria-geo">
     <img src="assets/logo.png" alt="شعار algeria-geo" width="720" style="border-radius: 16px; max-width: 100%; box-shadow: 0 10px 30px rgba(0,0,0,0.3);" />
   </a>
 
@@ -21,7 +21,7 @@
 
   <br/>
 
-  [![CI](https://github.com/djazairdev/algeria-geo/actions/workflows/ci.yml/badge.svg)](https://github.com/djazairdev/algeria-geo/actions/workflows/ci.yml)
+  [![CI](https://github.com/test-bit-sys/algeria-geo/actions/workflows/ci.yml/badge.svg)](https://github.com/test-bit-sys/algeria-geo/actions/workflows/ci.yml)
   [![PyPI](https://img.shields.io/pypi/v/algeria-geo?logo=pypi&color=blue)](https://pypi.org/project/algeria-geo/)
   [![npm](https://img.shields.io/npm/v/algeria-geo?logo=npm&color=red)](https://www.npmjs.com/package/algeria-geo/)
   [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
@@ -73,7 +73,7 @@
 | **البلديات** | **1,541** | `0101` – `6912` (رمز ONS الرباعي) | العربية، الفرنسية، والنقل اللاتيني ASCII |
 
 > [!NOTE]
-> الأسماء متوفرة باللغتين العربية (`name_ar`) والفرنسية (`name_fr`). يمثل الحقل `name_en` صيغة بحروف ASCII لاتينية مشتقة من التهجئة الرسمية لتسهيل البحث. حقول الرموز البريدية والإحداثيات محجوزة في المخطط وقيمتها حالياً `null` حتى يتم التحقق منها ومطابقتها مع المصادر البريدية الرسمية.
+> الأسماء متوفرة باللغتين العربية (`name_ar`) والفرنسية (`name_fr`). يمثل الحقل `name_en` صيغة بحروف ASCII لاتينية مشتقة من التهجئة الرسمية لتسهيل البحث. الرموز البريدية الرسمية (`post_code`) المكونة من 5 أرقام والإحداثيات الجغرافية (`latitude` و `longitude`) متوفرة ومحققة لكافة البلديات الـ 1,541، مع توفير مؤشرات الهاتف الثابت (`phone_code`) لكافة الولايات الـ 69.
 
 ---
 

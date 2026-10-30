@@ -54,6 +54,10 @@ def test_phone_code_and_commune_parent():
     assert alger.code == "16"
     assert geo.get_wilaya_by_phone_code("21").code == "16"
 
+    blida_area = geo.get_wilayas_by_phone_code("025")
+    assert any(w.code == "09" for w in blida_area)
+    assert any(w.code == "26" for w in blida_area)
+
     # Reverse parent lookup
     aflou_w69 = geo.get_wilaya_by_commune("0319", era=69)
     assert aflou_w69 is not None
@@ -62,6 +66,11 @@ def test_phone_code_and_commune_parent():
     aflou_w58 = geo.get_wilaya_by_commune("0319", era=58)
     assert aflou_w58 is not None
     assert aflou_w58.code == "03"
+
+    # Verify formerly orphan communes have assigned dairas
+    assert geo.get_commune("0919").daira_code == "0926"
+    assert geo.get_commune("3532").daira_code == "3502"
+    assert geo.get_commune("3533").daira_code == "3502"
 
 
 def test_serialization():
@@ -87,9 +96,25 @@ def test_search_cross_script():
     assert tiaret.best is not None
     assert tiaret.to_dict()["query"] == "Tiaret"
 
+    # Illizi with hamza and Arabizi search
+    assert geo.get_wilaya("إليزي").code == "33"
+    assert geo.search("إليزي").wilayas[0].item.code == "33"
+    assert geo.search("3in defla").wilayas[0].item.code == "44"
+    assert geo.search("war9la").wilayas[0].item.code == "30"
+    assert geo.search("5nchela").wilayas[0].item.code == "40"
+
 
 def test_dropdown():
     opts = geo.to_dropdown_options("fr")
     assert opts[0] == {"value": "01", "label": "Adrar"}
     assert len(opts) == 69
     assert len(geo.to_dropdown_options("ar", era=58)) == 58
+
+
+def test_postal_codes_and_coordinates():
+    assert geo.get_postal_code("Alger Centre") == "16000"
+    assert geo.get_postal_code("وهران") == "31000"
+    c = geo.get_commune("1601")
+    assert c.post_code == "16000"
+    assert isinstance(c.latitude, float) and c.latitude > 35
+    assert isinstance(c.longitude, float) and c.longitude > 2

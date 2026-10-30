@@ -107,17 +107,23 @@ class GeoIndex:
         self.wilaya_by_name: Dict[str, Wilaya] = {}
         self.wilaya_by_phon: Dict[str, List[Wilaya]] = {}
         self.wilaya_by_phone: Dict[str, Wilaya] = {}
+        self.wilayas_by_phone: Dict[str, List[Wilaya]] = {}
         for w in self.wilayas:
-            for lang in _LANGS:
-                raw = getattr(w, f"name_{lang}")
+            raw_names = [getattr(w, f"name_{lang}") for lang in _LANGS]
+            if w.code == "33":
+                raw_names.extend(["ايليزي", "ايليزى", "اليزي"])
+            for raw in raw_names:
                 self.wilaya_by_name.setdefault(normalize(raw), w)
                 bucket = self.wilaya_by_phon.setdefault(phonetic_key(raw), [])
                 if w not in bucket:
                     bucket.append(w)
             if w.phone_code:
-                self.wilaya_by_phone[w.phone_code] = w
+                self.wilaya_by_phone.setdefault(w.phone_code, w)
+                self.wilayas_by_phone.setdefault(w.phone_code, []).append(w)
                 if w.phone_code.startswith("0"):
-                    self.wilaya_by_phone[w.phone_code[1:]] = w
+                    short = w.phone_code[1:]
+                    self.wilaya_by_phone.setdefault(short, w)
+                    self.wilayas_by_phone.setdefault(short, []).append(w)
 
         self.commune_by_name: Dict[str, List[Commune]] = {}
         for c in self.communes:
@@ -196,6 +202,10 @@ class GeoIndex:
     def get_communes_by_daira(self, daira_code: Identifier) -> List[Commune]:
         code = to_daira_code(daira_code)
         return list(self.communes_by_daira.get(code, ())) if code else []
+
+    def get_wilayas_by_phone_code(self, phone_code: Union[str, int]) -> List[Wilaya]:
+        s = str(phone_code).strip()
+        return list(self.wilayas_by_phone.get(s, ()))
 
     def get_wilaya_by_phone_code(self, phone_code: Union[str, int]) -> Optional[Wilaya]:
         s = str(phone_code).strip()

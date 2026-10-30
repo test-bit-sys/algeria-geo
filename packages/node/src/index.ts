@@ -29,6 +29,7 @@ interface Index {
   readonly wilayaByName: Map<string, Wilaya>;
   readonly wilayaByPhon: Map<string, Wilaya[]>;
   readonly wilayaByPhoneCode: Map<string, Wilaya>;
+  readonly wilayasByPhoneCode: Map<string, Wilaya[]>;
   readonly communeByName: Map<string, Commune[]>;
   readonly wEntries: readonly Entry<Wilaya>[];
   readonly dEntries: readonly Entry<Daira>[];
@@ -91,16 +92,22 @@ function build(): Index {
   const wilayaByName = new Map<string, Wilaya>();
   const wilayaByPhon = new Map<string, Wilaya[]>();
   const wilayaByPhoneCode = new Map<string, Wilaya>();
+  const wilayasByPhoneCode = new Map<string, Wilaya[]>();
   for (const w of wilayas) {
-    for (const raw of [w.name_ar, w.name_fr, w.name_en]) {
+    const rawNames = [w.name_ar, w.name_fr, w.name_en];
+    if (w.code === "33") rawNames.push("ايليزي", "ايليزى", "اليزي");
+    for (const raw of rawNames) {
       const key = normalize(raw);
       if (!wilayaByName.has(key)) wilayaByName.set(key, w);
       push(wilayaByPhon, phoneticKey(raw), w);
     }
     if (w.phone_code) {
-      wilayaByPhoneCode.set(w.phone_code, w);
+      if (!wilayaByPhoneCode.has(w.phone_code)) wilayaByPhoneCode.set(w.phone_code, w);
+      push(wilayasByPhoneCode, w.phone_code, w);
       if (w.phone_code.startsWith("0")) {
-        wilayaByPhoneCode.set(w.phone_code.slice(1), w);
+        const short = w.phone_code.slice(1);
+        if (!wilayaByPhoneCode.has(short)) wilayaByPhoneCode.set(short, w);
+        push(wilayasByPhoneCode, short, w);
       }
     }
   }
@@ -122,6 +129,7 @@ function build(): Index {
     wilayaByName,
     wilayaByPhon,
     wilayaByPhoneCode,
+    wilayasByPhoneCode,
     communeByName,
     wEntries: wilayas.map(entry),
     dEntries: dairas.map(entry),
@@ -247,7 +255,13 @@ export function getCommunesByDaira(dairaCode: string | number): Commune[] {
   return code !== null ? [...(index().communesByDaira.get(code) ?? [])] : [];
 }
 
-/** Look up a wilaya by its telephone area code (e.g. "021" or "21"). */
+/** Look up all wilayas sharing a telephone area code (e.g. "025" or "25"). */
+export function getWilayasByPhoneCode(phoneCode: string | number): Wilaya[] {
+  const s = String(phoneCode).trim();
+  return [...(index().wilayasByPhoneCode.get(s) ?? [])];
+}
+
+/** Look up a wilaya by its telephone area code (e.g. "021" or "21"). Returns primary/first match. */
 export function getWilayaByPhoneCode(phoneCode: string | number): Wilaya | null {
   const s = String(phoneCode).trim();
   return index().wilayaByPhoneCode.get(s) ?? null;

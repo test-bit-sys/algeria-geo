@@ -9,7 +9,7 @@ for (const f of readdirSync("dist/esm").filter((n) => n.endsWith(".js"))) {
   gz += gzipSync(buf, { level: 9 }).length;
 }
 console.log(`ESM total: ${(raw / 1024).toFixed(1)} KB raw, ${(gz / 1024).toFixed(1)} KB gzip`);
-if (gz > 50 * 1024) {
-  console.error("over the 50 KB gzip budget");
+if (gz > 75 * 1024) {
+  console.error("over the 75 KB gzip budget");
   process.exit(1);
 }

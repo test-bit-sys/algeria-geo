@@ -37,9 +37,9 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/djazairdev/algeria-geo"
-Repository = "https://github.com/djazairdev/algeria-geo"
-Issues = "https://github.com/djazairdev/algeria-geo/issues"
+Homepage = "https://github.com/test-bit-sys/algeria-geo"
+Repository = "https://github.com/test-bit-sys/algeria-geo"
+Issues = "https://github.com/test-bit-sys/algeria-geo/issues"
 
 [project.optional-dependencies]
 test = ["pytest>=7"]

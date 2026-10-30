@@ -1,5 +1,7 @@
 const AR_STRIP = /[\u064B-\u065F\u0670\u06D6-\u06ED\u0640]/g;
-const AL_PREFIX = /(^| )ال(?=\S{2,})/g;
+// Match definite article with bare Alef, Alef Wasla or Alef with Hamza above, but not Alef with Hamza below (إ).
+// Also protect "اليزي" so its leading letters are not mistakenly treated as the definite article.
+const AL_PREFIX = /(^| )[\u0627\u0671\u0623]\u0644(?!يزي(?:\b|\s))(?=\S{2,})/g;
 
 const AR_ROMAN: Readonly<Record<string, string>> = {
   ا: "a", ب: "b", ت: "t", ث: "th", ج: "j", ح: "h", خ: "kh",
@@ -8,6 +10,14 @@ const AR_ROMAN: Readonly<Record<string, string>> = {
   ك: "k", ل: "l", م: "m", ن: "n", ه: "h", و: "w", ي: "y",
   ء: "", ڤ: "g", ڨ: "g", گ: "g", پ: "b",
 };
+
+const ARABIZI_MAP: ReadonlyArray<readonly [string, string]> = [
+  ["3", ""],
+  ["7", "h"],
+  ["9", "q"],
+  ["5", "kh"],
+  ["2", ""],
+];
 
 const DIGRAPHS: ReadonlyArray<readonly [string, string]> = [
   ["ou", "w"], ["ch", "s"], ["sh", "s"], ["kh", "h"], ["gh", "k"],
@@ -19,6 +29,8 @@ const FOLD_TO = "kkksbfk";
 /** Lowercase, strip accents/diacritics, unify Arabic letter variants, drop the "ال" prefix. */
 export function normalize(input: string): string {
   let s = input.normalize("NFKC").replace(AR_STRIP, "");
+  // Strip definite article before folding hamzas to preserve root words starting with "إلـ"
+  s = s.replace(AL_PREFIX, "$1");
   s = s
     .replace(/[ٱأإآ]/g, "ا")
     .replace(/ى/g, "ي")
@@ -30,19 +42,23 @@ export function normalize(input: string): string {
     .replace(/\p{M}/gu, "")
     .replace(/[^\p{L}\p{N}]+/gu, " ")
     .trim();
-  return s.replace(AL_PREFIX, "$1");
+  return s;
 }
 
 /** Consonant skeleton shared by Arabic and Latin spellings ("Ouargla" = "Warqla" = "ورقلة"). */
 export function phoneticKey(input: string): string {
-  let s = "";
-  for (const ch of normalize(input)) s += AR_ROMAN[ch] ?? ch;
-  s = s.replace(/ /g, "");
-  for (const [a, b] of DIGRAPHS) s = s.split(a).join(b);
-  s = s.replace(/[qcgzpvx]/g, (ch) => FOLD_TO.charAt(FOLD_FROM.indexOf(ch)));
-  s = s.replace(/[aeiouy]/g, "").replace(/(.)\1+/g, "$1");
-  if (s.length > 2 && s.endsWith("h")) s = s.slice(0, -1);
-  return s;
+  let s = input.toLowerCase();
+  for (const [digit, repl] of ARABIZI_MAP) {
+    s = s.split(digit).join(repl);
+  }
+  let roman = "";
+  for (const ch of normalize(s)) roman += AR_ROMAN[ch] ?? ch;
+  roman = roman.replace(/ /g, "");
+  for (const [a, b] of DIGRAPHS) roman = roman.split(a).join(b);
+  roman = roman.replace(/[qcgzpvx]/g, (ch) => FOLD_TO.charAt(FOLD_FROM.indexOf(ch)));
+  roman = roman.replace(/[aeiouy]/g, "").replace(/(.)\1+/g, "$1");
+  if (roman.length > 2 && roman.endsWith("h")) roman = roman.slice(0, -1);
+  return roman;
 }
 
 /** 1 - normalized Levenshtein distance. */

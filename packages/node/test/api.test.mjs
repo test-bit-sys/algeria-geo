@@ -8,9 +8,11 @@ import {
   getCommunesByDaira,
   getDaira,
   getDairas,
+  getPostalCode,
   getWilaya,
   getWilayaByCommune,
   getWilayaByPhoneCode,
+  getWilayasByPhoneCode,
   getWilayas,
   search,
   toDropdownOptions,
@@ -63,12 +65,21 @@ test("phone code and commune parent lookups", () => {
   const algerShort = getWilayaByPhoneCode("21");
   assert.equal(algerShort?.code, "16");
 
+  const blidaArea = getWilayasByPhoneCode("025");
+  assert.ok(blidaArea.some((w) => w.code === "09"));
+  assert.ok(blidaArea.some((w) => w.code === "26"));
+
   // Commune to wilaya reverse lookup
   const aflouWilaya69 = getWilayaByCommune("0319", 69);
   assert.equal(aflouWilaya69?.code, "59"); // Aflou is now wilaya 59
 
   const aflouWilaya58 = getWilayaByCommune("0319", 58);
   assert.equal(aflouWilaya58?.code, "03"); // Historically in Laghouat (03)
+
+  // Verify formerly orphan communes have assigned dairas
+  assert.equal(getCommune("0919")?.daira_code, "0926");
+  assert.equal(getCommune("3532")?.daira_code, "3502");
+  assert.equal(getCommune("3533")?.daira_code, "3502");
 });
 
 test("cross-script search and options", () => {
@@ -77,10 +88,26 @@ test("cross-script search and options", () => {
   assert.equal(search("Ouargla").wilayas[0]?.item.code, "30");
   assert.equal(search("Warqla", { limit: 1 }).wilayas.length, 1);
   assert.equal(search("").wilayas.length, 0);
+
+  // Illizi with hamza and Arabizi search
+  assert.equal(getWilaya("إليزي")?.code, "33");
+  assert.equal(search("إليزي").wilayas[0]?.item.code, "33");
+  assert.equal(search("3in defla").wilayas[0]?.item.code, "44");
+  assert.equal(search("war9la").wilayas[0]?.item.code, "30");
+  assert.equal(search("5nchela").wilayas[0]?.item.code, "40");
 });
 
 test("dropdown", () => {
   assert.deepEqual(toDropdownOptions("fr")[0], { value: "01", label: "Adrar" });
   assert.equal(toDropdownOptions().length, 69);
   assert.equal(toDropdownOptions("ar", 58).length, 58);
+});
+
+test("postal codes and coordinates", () => {
+  assert.equal(getPostalCode("Alger Centre"), "16000");
+  assert.equal(getPostalCode("وهران"), "31000");
+  const c = getCommune("1601");
+  assert.equal(c?.post_code, "16000");
+  assert.ok(typeof c?.latitude === "number" && c.latitude > 35);
+  assert.ok(typeof c?.longitude === "number" && c.longitude > 2);
 });

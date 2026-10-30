@@ -5,11 +5,14 @@ import re
 import unicodedata
 
 _AR_STRIP = re.compile("[\u064B-\u065F\u0670\u06D6-\u06ED\u0640]")
+# Match definite article with bare Alef, Alef Wasla or Alef with Hamza above, but not Alef with Hamza below (إ).
+# Also protect "اليزي" so its leading letters are not mistakenly treated as the definite article.
+_AL_PREFIX = re.compile(r"(^| )[\u0627\u0671\u0623]\u0644(?!يزي(?:\b|\s))(?=\S{2,})")
 _AR_FOLD = str.maketrans({
     "ٱ": "ا", "أ": "ا", "إ": "ا", "آ": "ا",
     "ى": "ي", "ئ": "ي", "ؤ": "و", "ة": "ه",
 })
-_AL_PREFIX = re.compile(r"(^| )ال(?=\S{2,})")
+_ARABIZI = (("3", ""), ("7", "h"), ("9", "q"), ("5", "kh"), ("2", ""))
 
 _AR_ROMAN = {
     "ا": "a", "ب": "b", "ت": "t", "ث": "th", "ج": "j", "ح": "h", "خ": "kh",
@@ -28,24 +31,28 @@ _REPEATS = re.compile(r"(.)\1+")
 def normalize(text: str) -> str:
     """Lowercase, strip accents/diacritics, unify Arabic letter variants, drop the 'ال' prefix."""
     s = unicodedata.normalize("NFKC", text)
-    s = _AR_STRIP.sub("", s).translate(_AR_FOLD).lower()
+    s = _AR_STRIP.sub("", s)
+    s = _AL_PREFIX.sub(r"\1", s)
+    s = s.translate(_AR_FOLD).lower()
     s = unicodedata.normalize("NFKD", s)
     s = "".join(c if c.isalnum() else " " for c in s if not unicodedata.category(c).startswith("M"))
-    s = " ".join(s.split())
-    return _AL_PREFIX.sub(r"\1", s)
+    return " ".join(s.split())
 
 
 def phonetic_key(text: str) -> str:
     """Consonant skeleton shared by Arabic and Latin spellings ('Ouargla' == 'Warqla' == 'ورقلة')."""
-    s = "".join(_AR_ROMAN.get(c, c) for c in normalize(text)).replace(" ", "")
+    s = text.lower()
+    for digit, repl in _ARABIZI:
+        s = s.replace(digit, repl)
+    roman = "".join(_AR_ROMAN.get(c, c) for c in normalize(s)).replace(" ", "")
     for a, b in _DIGRAPHS:
-        s = s.replace(a, b)
-    s = s.translate(_FOLD)
-    s = _VOWELS.sub("", s)
-    s = _REPEATS.sub(r"\1", s)
-    if len(s) > 2 and s.endswith("h"):
-        s = s[:-1]
-    return s
+        roman = roman.replace(a, b)
+    roman = roman.translate(_FOLD)
+    roman = _VOWELS.sub("", roman)
+    roman = _REPEATS.sub(r"\1", roman)
+    if len(roman) > 2 and roman.endswith("h"):
+        roman = roman[:-1]
+    return roman
 
 
 def similarity(a: str, b: str) -> float:

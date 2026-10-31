@@ -264,13 +264,21 @@ Les distributions générées se trouvent dans le dossier [`dist/`](dist/) :
 
 ---
 
-## Source des données et citations
+## Sources de données et attributions
 
-Les données canoniques sont issues de [djazairdev/wilayas](https://github.com/djazairdev/wilayas/tree/0b3b6ab2ac1b1569469285d8fe5e7df18666fcdf), transcrites fidèlement depuis les textes légaux publiés au *Journal officiel de la République algérienne démocratique et populaire*.
+Les limites administratives, la nomenclature, les codes postaux et les coordonnées d'**algeria-geo** sont compilés et vérifiés à partir des textes officiels et de jeux de données géographiques ouverts :
 
-- 60 communes ne sont rattachées à aucune daïra dans les textes officiels ; leur champ `daira_code` est `null`.
-- Le code source de la bibliothèque est sous licence **MIT**.
-- Le jeu de données administratif sous-jacent est dans le domaine public sous **CC0 1.0 Universel**.
+1. **Découpage administratif et nomenclature :**
+   - Transcrits fidèlement depuis les textes légaux publiés au *Journal officiel de la République algérienne démocratique et populaire*, avec pour socle initial [djazairdev/wilayas](https://github.com/djazairdev/wilayas/tree/0b3b6ab2ac1b1569469285d8fe5e7df18666fcdf).
+   - Les 57 communes d'Alger (16) relèvent du statut particulier des circonscriptions administratives et conservent `daira_code: null` dans la nomenclature statistique officielle.
+
+2. **Codes postaux et coordonnées vérifiées (GeoAlgeria) :**
+   - Les codes postaux officiels à 5 chiffres et les coordonnées des centres communaux sont issus du projet [GeoAlgeria](https://github.com/yasserstudio/geoalgeria) de Yasser Studio, sous **licence MIT**. Copyright (c) 2026 Yasser Studio.
+
+3. **Données OpenStreetMap (ODbL 1.0) :**
+   - 323 des 1 541 coordonnées communales sont dérivées des relations OpenStreetMap via GeoAlgeria et sont mises à disposition sous licence [Open Database License (ODbL) 1.0](https://opendatacommons.org/licenses/odbl/1-0/) : **© les contributeurs d'OpenStreetMap**.
+
+Consultez [NOTICE](NOTICE) et [LICENSE](LICENSE) pour plus de détails.
 
 ---
 

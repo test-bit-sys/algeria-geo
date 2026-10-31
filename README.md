@@ -264,13 +264,21 @@ Pre-built distribution files are located in the [`dist/`](dist/) folder:
 
 ---
 
-## Data Source & Provenance
+## Data Sources & Attributions
 
-The canonical data is pinned to [djazairdev/wilayas](https://github.com/djazairdev/wilayas/tree/0b3b6ab2ac1b1569469285d8fe5e7df18666fcdf), an open dataset transcribed directly from cited legislative decrees in Algeria's official gazette (*Journal officiel de la République algérienne démocratique et populaire*).
+The administrative boundaries, nomenclature, postal codes, and coordinates in **algeria-geo** are compiled and verified from official legislative records and trusted open-source geographic datasets:
 
-- 60 communes have no daira assignment in the cited official records; their `daira_code` is `null`.
-- Code and library logic is licensed under **MIT**.
-- The underlying administrative dataset is in the public domain under **CC0 1.0 Universal**.
+1. **Administrative Boundaries & Nomenclature:**
+   - Transcribed directly from executive decrees and legislative texts published in Algeria's official gazette (*Journal officiel de la République algérienne démocratique et populaire*), referenced from [djazairdev/wilayas](https://github.com/djazairdev/wilayas/tree/0b3b6ab2ac1b1569469285d8fe5e7df18666fcdf).
+   - 57 communes belonging to Wilaya 16 (Alger) operate under a special administrative status (circonscriptions administratives) and retain `daira_code: null` in official statistical records.
+
+2. **Postal Codes & Verified Coordinates:**
+   - Official 5-digit postal codes and municipality center coordinates are derived from the [GeoAlgeria](https://github.com/yasserstudio/geoalgeria) project by Yasser Studio, licensed under the **MIT License**. Copyright (c) 2026 Yasser Studio.
+
+3. **OpenStreetMap Data (ODbL 1.0):**
+   - 323 of the 1,541 commune coordinates are derived from OpenStreetMap administrative relations via GeoAlgeria and are made available under the [Open Database License (ODbL) 1.0](https://opendatacommons.org/licenses/odbl/1-0/): **© OpenStreetMap contributors**.
+
+See [NOTICE](NOTICE) and [LICENSE](LICENSE) for full details.
 
 ---
 

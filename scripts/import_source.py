@@ -52,13 +52,25 @@ def main() -> int:
         existing_wilayas = json.loads(wilaya_path.read_text(encoding="utf-8"))
     phone_codes = {row["code"]: row.get("phone_code") for row in existing_wilayas}
 
+    commune_path = ROOT / "data" / "communes.json"
+    existing_communes: list[dict[str, Any]] = []
+    if commune_path.exists():
+        existing_communes = json.loads(commune_path.read_text(encoding="utf-8"))
+    commune_attrs = {
+        row["code"]: (row.get("post_code"), row.get("latitude"), row.get("longitude"), row.get("daira_code"))
+        for row in existing_communes
+    }
+
     wilayas = []
     for row in wilaya_source:
         code = pad(row["code"])
         number = int(code)
+        name_ar = row["name_ar"]
+        if code == "33":
+            name_ar = "إليزي"
         wilayas.append({
             "code": code,
-            "name_ar": row["name_ar"],
+            "name_ar": name_ar,
             "name_fr": row["name_fr"],
             "name_en": ascii_fold(row["name_fr"]),
             "phone_code": phone_codes.get(code),
@@ -85,16 +97,18 @@ def main() -> int:
         code = row["code"].strip()
         wilaya = pad(row["wilaya"])
         old_wilaya = pad(row["wilaya_before"] or wilaya)
+        prev_post, prev_lat, prev_lon, prev_daira = commune_attrs.get(code, (None, None, None, None))
+        daira_code = prev_daira if prev_daira else (row["daira"].strip() or None)
         communes.append({
             "code": code,
-            "daira_code": row["daira"].strip() or None,
+            "daira_code": daira_code,
             "wilaya_code": wilaya,
             "name_ar": row["name_ar"],
             "name_fr": row["name_fr"],
             "name_en": ascii_fold(row["name_fr"]),
-            "post_code": None,
-            "latitude": None,
-            "longitude": None,
+            "post_code": prev_post,
+            "latitude": prev_lat,
+            "longitude": prev_lon,
             "wilaya_code_58": old_wilaya,
             "wilaya_code_48": ancestor(old_wilaya, parent_by_code, 48),
         })

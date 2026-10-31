@@ -304,9 +304,13 @@ Les contributions sont les bienvenues ! Consultez [CONTRIBUTING.md](CONTRIBUTING
 
 ---
 
-## Licence
+## Licence & Mentions légales
 
-Projet publié sous licence [MIT](LICENSE).  
-Les données administratives sont dans le domaine public sous [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/).
+- **Logiciel & Bibliothèques :** Publiés sous licence [MIT](LICENSE). Copyright (c) 2026 test-bit-sys.
+- **Compilation des données et codes postaux :** Dérivés du projet [GeoAlgeria](https://github.com/yasserstudio/geoalgeria) sous licence [MIT](https://opensource.org/licenses/MIT). Copyright (c) 2025-2026 Yasser's studio (https://yasser.studio).
+- **Coordonnées dérivées d'OpenStreetMap :** 323 coordonnées de centres communaux proviennent d'OpenStreetMap via GeoAlgeria et sont régies par la licence [Open Database License (ODbL) 1.0](https://opendatacommons.org/licenses/odbl/1-0/) (**© contributeurs OpenStreetMap**), et ne sont pas sous CC0.
+- **Nomenclature administrative officielle :** Transcrite directement à partir du Journal officiel de la République algérienne.
+
+Consultez le fichier [NOTICE](NOTICE) pour tous les détails d'attribution et de licences.
 
 <p align="right"><a href="#top">Haut de page ↑</a></p>

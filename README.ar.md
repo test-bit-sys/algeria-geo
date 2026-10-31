@@ -304,10 +304,14 @@ python scripts/build.py
 
 ---
 
-## الترخيص
+## الترخيص وحقوق المصادر
 
-الكود البرمجي مرخص بموجب [رخصة MIT](LICENSE).  
-البيانات الإدارية تقع ضمن الملك العام بموجب [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/).
+- **الكود والمكتبات البرمجية:** مرخص بموجب [رخصة MIT](LICENSE). حقوق النشر (c) 2026 test-bit-sys.
+- **تجميع البيانات والرموز البريدية:** مستمدة من مشروع [GeoAlgeria](https://github.com/yasserstudio/geoalgeria) بموجب [رخصة MIT](https://opensource.org/licenses/MIT). حقوق النشر (c) 2025-2026 استوديو ياسر (https://yasser.studio).
+- **إحداثيات OpenStreetMap المشتقة:** 323 إحداثية مركز بلدية مشتقة من علاقات OpenStreetMap عبر GeoAlgeria وتخضع لـ [رخصة قاعدة البيانات المفتوحة (ODbL) 1.0](https://opendatacommons.org/licenses/odbl/1-0/) (**حقوق النشر © لمساهمي OpenStreetMap**)، وليست ضمن الملك العام (CC0).
+- **التسميات والحدود الإدارية:** بيانات إدارية رسمية منقولة عن نصوص الجريدة الرسمية للجمهورية الجزائرية.
+
+لمزيد من التفاصيل والبيانات القانونية الكاملة، يرجى مراجعة ملف [NOTICE](NOTICE).
 
 </div>
 

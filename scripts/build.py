@@ -297,9 +297,10 @@ def emit_python(root: Path, wil: list[Row], dai: list[Row], com: list[Row]) -> N
     write_json(base / "wilayas.json", wil)
     write_json(base / "dairas.json", dai)
     write_json(base / "communes.json", com)
-    readme = root / "README.md"
-    if readme.exists():
-        (root / "packages" / "python" / "README.md").write_text(readme.read_text(encoding="utf-8"), encoding="utf-8")
+    for doc in ("README.md", "NOTICE", "LICENSE"):
+        src = root / doc
+        if src.exists():
+            (root / "packages" / "python" / doc).write_text(src.read_text(encoding="utf-8"), encoding="utf-8")
 
 
 def emit_node(root: Path, wil: list[Row], dai: list[Row], com: list[Row]) -> None:
@@ -321,9 +322,10 @@ def emit_node(root: Path, wil: list[Row], dai: list[Row], com: list[Row]) -> Non
             + block("COMMUNES", "CommuneRow", c))
     (root / "packages" / "node" / "src").mkdir(parents=True, exist_ok=True)
     (root / "packages" / "node" / "src" / "data.ts").write_text(text, encoding="utf-8")
-    readme = root / "README.md"
-    if readme.exists():
-        (root / "packages" / "node" / "README.md").write_text(readme.read_text(encoding="utf-8"), encoding="utf-8")
+    for doc in ("README.md", "NOTICE", "LICENSE"):
+        src = root / doc
+        if src.exists():
+            (root / "packages" / "node" / doc).write_text(src.read_text(encoding="utf-8"), encoding="utf-8")
 
 
 def main(argv: list[str] | None = None) -> int:

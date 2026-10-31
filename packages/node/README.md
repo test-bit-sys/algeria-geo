@@ -304,9 +304,13 @@ Contributions are welcome! Please check [CONTRIBUTING.md](CONTRIBUTING.md) for d
 
 ---
 
-## License
+## License & Legal Notices
 
-This project is licensed under the [MIT License](LICENSE).  
-The administrative dataset is in the public domain under [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/).
+- **Code & Libraries:** Licensed under the [MIT License](LICENSE). Copyright (c) 2026 test-bit-sys.
+- **Data Compilation & Postal Codes:** Derived from [GeoAlgeria](https://github.com/yasserstudio/geoalgeria) under the [MIT License](https://opensource.org/licenses/MIT). Copyright (c) 2025-2026 Yasser's studio (https://yasser.studio).
+- **OpenStreetMap Coordinates:** 323 commune center coordinates are derived from OpenStreetMap relations via GeoAlgeria and are made available under the [Open Database License (ODbL) 1.0](https://opendatacommons.org/licenses/odbl/1-0/) (**© OpenStreetMap contributors**), and are not released under CC0.
+- **Administrative Nomenclature:** Official administrative divisions and names are transcribed from the Official Gazette of the Republic of Algeria.
+
+See the [NOTICE](NOTICE) file for complete third-party licenses and attribution terms.
 
 <p align="right"><a href="#top">Back to top ↑</a></p>

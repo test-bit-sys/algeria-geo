@@ -118,3 +118,30 @@ def test_postal_codes_and_coordinates():
     assert c.post_code == "16000"
     assert isinstance(c.latitude, float) and c.latitude > 35
     assert isinstance(c.longitude, float) and c.longitude > 2
+
+
+def test_svg_map():
+    assert len(geo.WILAYA_SVG_PATHS) == 69
+    assert geo.get_wilaya_svg_path(16).startswith("M")
+    assert geo.get_wilaya_svg_path("16").startswith("M")
+    assert geo.get_wilaya_svg_path("99") is None
+
+    svg69 = geo.get_map_svg()
+    assert 'id="algeria-map"' in svg69
+    assert 'id="wilaya-16"' in svg69
+    assert 'id="wilaya-69"' in svg69
+    assert svg69.count("<path ") == 69
+
+    svg58 = geo.get_map_svg(era=58)
+    assert svg58.count("<path ") == 58
+    assert 'id="wilaya-59"' not in svg58
+
+    svg48 = geo.get_map_svg(era=48)
+    assert svg48.count("<path ") == 48
+    assert 'id="wilaya-49"' not in svg48
+
+    custom = geo.get_map_svg(class_name="dz-path", width=800, height=600, include_styles=False)
+    assert 'class="dz-path"' in custom
+    assert 'width="800"' in custom
+    assert "<style>" not in custom
+

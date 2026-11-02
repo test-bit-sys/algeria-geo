@@ -28,6 +28,16 @@
         "default": "./dist/cjs/index.js"
       }
     },
+    "./map": {
+      "import": {
+        "types": "./dist/types/map.d.ts",
+        "default": "./dist/esm/map.js"
+      },
+      "require": {
+        "types": "./dist/types/map.d.ts",
+        "default": "./dist/cjs/map.js"
+      }
+    },
     "./package.json": "./package.json"
   },
   "files": [

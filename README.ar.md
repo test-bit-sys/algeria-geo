@@ -50,6 +50,7 @@
   - [TypeScript / JavaScript](#typescript--javascript)
   - [Python](#python)
 - [جدول الواجهة البرمجية (API)](#جدول-الواجهة-البرمجية-api)
+- [خريطة SVG تفاعلية و GeoJSON](#خريطة-svg-تفاعلية-و-geojson)
 - [الحقب الإدارية التاريخية (48، 58، 69)](#الحقب-الإدارية-التاريخية-48-58-69)
 - [توزيعات البيانات الجاهزة (SQL, CSV, JSON)](#توزيعات-البيانات-الجاهزة)
 - [مصدر البيانات والتراخيص](#مصدر-البيانات-والتراخيص)
@@ -66,6 +67,7 @@
 - 🔍 **بحث تقريبي ذكي عابر للغات**: معالجة متقدمة لعلامات التشكيل والتنوين، الهمزات، الحركات الصوتية اللاتينية، والنقل الحرفي الصوتي (مثل: `Warqla` = `Ouargla` = `ورقلة`).
 - ⚡ **أداء فائق بدون أي اعتماديات خارجية**: تطبيق مبني بالكامل على المكتبات القياسية مع استعلامات فورية في الذاكرة بتعقيد زمني $O(1)$.
 - 📦 **تطابق تام بين اللغتين**: توافق كامل للوظائف والنماذج والأداء بين بيئتي **TypeScript** (ESM + CommonJS) و**Python** (مع كامل التلميحات النوعية Typed).
+- 🗺️ **خريطة SVG متجهة وتفاعلية و GeoJSON**: خريطة متجهة نقية للولايات الـ 69 مع خصائص دلالية (`data-code`, `data-name-ar`, `data-name-fr`) قابلة للتلوين بـ CSS والتفاعل في React/Vue/HTML ومضلعات GeoJSON.
 - 🗄️ **توزيعات جاهزة متعددة الصيغ**: ملفات SQL جاهزة للاستيراد المباشر (PostgreSQL، SQLite، MySQL / MariaDB)، ملفات JSON مصغرة، شجرة هيكلية كاملة، وملفات CSV بترميز UTF-8 مع BOM.
 
 ---
@@ -223,6 +225,73 @@ dropdown = geo.to_dropdown_options(lang="ar")
 | `search(query, lang, limit)` | `search(query, langOrOptions, limit)` | بحث تقريبي ذكي عابر للغات في الولايات والدوائر والبلديات |
 | `get_postal_code(name, wilaya)` | `getPostalCode(name, wilaya)` | جلب الرمز البريدي عند توفر بياناته |
 | `to_dropdown_options(lang, era)` | `toDropdownOptions(lang, era)` | تجهيز مصفوفة خيارات لقوائم الاختيار في واجهات الويب |
+| `get_map_svg(era=69, ...)` | `getMapSvg(options?)` | توليد نص خريطة SVG متكاملة للجزائر |
+| `get_wilaya_svg_path(code)` | `getWilayaSvgPath(code)` | جلب مسار الرسم المتجه (`d`) لولاية معينة |
+| `WILAYA_SVG_PATHS` | `WILAYA_SVG_PATHS` | قاموس/كائن يربط رمز كل ولاية بمسار الـ SVG الخاص بها |
+
+---
+
+## خريطة SVG تفاعلية و GeoJSON
+
+تتضمن `algeria-geo` خريطة متجهة دقيقة (بمسقط Web Mercator) تغطي جميع **الولايات الـ 69** بحدود دقيقة وخصائص دلالية غنية لكل مسار (`id="wilaya-XX"` و `data-code="XX"` و `data-name-ar` و `data-name-fr` و `data-phone-code` و `data-communes` إلخ).
+
+### الملفات الجاهزة في مجلد [`dist/maps/`](dist/maps/):
+
+- [`dist/maps/algeria-69.svg`](dist/maps/algeria-69.svg): خريطة SVG تفاعلية مع أنماط CSS مدمجة لتأثير التمرير (Hover).
+- [`dist/maps/algeria-69.min.svg`](dist/maps/algeria-69.min.svg): نسخة مصغرة ومضغوطة من الخريطة للمواقع والإنتاج السريع.
+- [`dist/maps/algeria-69.geojson`](dist/maps/algeria-69.geojson): مضلعات جغرافية متوافقة مع Leaflet وMapbox وD3 وQGIS.
+
+### الاستخدام في TypeScript / JavaScript
+
+```typescript
+import { getMapSvg, getWilayaSvgPath, WILAYA_SVG_PATHS } from "algeria-geo";
+// أو الاستيراد المباشر من المسار الفرعي:
+// import { getMapSvg } from "algeria-geo/map";
+
+// 1. توليد كود الـ SVG كاملاً (يدعم الحقب: 48، 58، 69)
+const svg = getMapSvg({ era: 69 });
+
+// 2. أو جلب مسار ولاية محددة للاستخدام في React / Vue
+const algerPath = getWilayaSvgPath(16); // "M5752 253l6-1..."
+```
+
+### مثال مكون في React / Next.js
+
+```tsx
+import { getWilayas, WILAYA_SVG_PATHS } from "algeria-geo";
+
+export function AlgeriaMap({ onSelect }: { onSelect: (code: string) => void }) {
+  const wilayas = getWilayas();
+
+  return (
+    <svg viewBox="0 0 10000 9999" width="100%" height="100%">
+      {wilayas.map((w) => (
+        <path
+          key={w.code}
+          id={`wilaya-${w.code}`}
+          d={WILAYA_SVG_PATHS[w.code]}
+          className="fill-slate-200 stroke-white stroke-[1.5] hover:fill-emerald-500 cursor-pointer transition-colors"
+          onClick={() => onSelect(w.code)}
+        >
+          <title>{w.name_ar} - {w.name_fr}</title>
+        </path>
+      ))}
+    </svg>
+  );
+}
+```
+
+### الاستخدام في Python
+
+```python
+import algeria_geo as geo
+
+# 1. توليد خريطة SVG مستقلة للتقسيم الحالي (أو 58 أو 48)
+svg_map = geo.get_map_svg(era=69)
+
+# 2. جلب مسار ولاية معينة
+alger_d = geo.get_wilaya_svg_path(16)
+```
 
 ---
 
@@ -261,6 +330,9 @@ communes_69 = geo.get_communes("59", era=69)
 | [`dist/csv/*.csv`](dist/csv/) | CSV | ملفات CSV مهيأة بترميز UTF-8 مع BOM لبرنامج Excel |
 | [`dist/algeria_geo.sql`](dist/algeria_geo.sql) | SQL | سكربت DDL وINSERT جاهز لقواعد بيانات PostgreSQL وSQLite |
 | [`dist/algeria_geo.mysql.sql`](dist/algeria_geo.mysql.sql) | SQL | سكربت مخصص لقواعد بيانات MySQL 8 وMariaDB (`utf8mb4`) |
+| [`dist/maps/algeria-69.svg`](dist/maps/algeria-69.svg) | SVG | خريطة متجهة نقية للولايات الـ 69 مع خصائص دلالية تفاعلية |
+| [`dist/maps/algeria-69.min.svg`](dist/maps/algeria-69.min.svg) | SVG | نسخة مصغرة ومضغوطة من الخريطة للمواقع والإنتاج السريع |
+| [`dist/maps/algeria-69.geojson`](dist/maps/algeria-69.geojson) | GeoJSON | مضلعات جغرافية متوافقة مع Leaflet وMapbox وD3 وQGIS |
 
 ---
 
@@ -277,6 +349,9 @@ communes_69 = geo.get_communes("59", era=69)
 
 3. **بيانات خريطة الشارع المفتوحة (OpenStreetMap):**
    - 323 إحداثية بلدية مشتقة من علاقات OpenStreetMap عبر GeoAlgeria، وهي متاحة بموجب [رخصة قاعدة البيانات المفتوحة (ODbL) 1.0](https://opendatacommons.org/licenses/odbl/1-0/): **حقوق النشر © لمساهمي OpenStreetMap**.
+
+4. **خرائط المتجهات والحدود الجغرافية (SVG و GeoJSON):**
+   - حدود الولايات ومسارات الرسم المتجهة مشتقة من علاقات OpenStreetMap عبر مشروع [Algeria69WilayaMap](https://github.com/chemsallioua/Algeria69WilayaMap) المرخص برخصة **MIT**؛ حقوق النشر للحدود © لمساهمي OpenStreetMap بموجب رخصة ODbL 1.0.
 
 لمزيد من التفاصيل، راجع ملفي [NOTICE](NOTICE) و [LICENSE](LICENSE).
 

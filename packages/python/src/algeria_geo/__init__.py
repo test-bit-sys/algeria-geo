@@ -4,7 +4,10 @@ from __future__ import annotations
 from typing import Dict, List, Optional, Union
 
 from .index import GeoIndex, default_index
+from .map import get_map_svg, get_wilaya_svg_path, load_svg_paths
 from .models import Commune, Daira, Match, SearchResult, Wilaya
+
+WILAYA_SVG_PATHS: Dict[str, str] = load_svg_paths()
 
 __version__ = "1.1.0"
 __all__ = [
@@ -13,6 +16,7 @@ __all__ = [
     "GeoIndex",
     "Match",
     "SearchResult",
+    "WILAYA_SVG_PATHS",
     "Wilaya",
     "default_index",
     "get_all_communes",
@@ -22,10 +26,12 @@ __all__ = [
     "get_communes_by_daira",
     "get_daira",
     "get_dairas",
+    "get_map_svg",
     "get_postal_code",
     "get_wilaya",
     "get_wilaya_by_commune",
     "get_wilaya_by_phone_code",
+    "get_wilaya_svg_path",
     "get_wilayas_by_phone_code",
     "get_wilayas",
     "search",

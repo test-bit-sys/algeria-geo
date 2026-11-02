@@ -15,4 +15,4 @@ test-node:
 test: build test-python test-node
 
 clean:
-	rm -rf dist packages/node/dist packages/node/src/data.ts packages/python/src/algeria_geo/data
+	rm -rf dist packages/node/dist packages/node/src/data.ts packages/node/src/map-data.ts packages/python/src/algeria_geo/data

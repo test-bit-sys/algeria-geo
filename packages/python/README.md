@@ -48,6 +48,7 @@
   - [TypeScript / JavaScript](#typescript--javascript)
   - [Python](#python)
 - [API Reference](#api-reference)
+- [Interactive SVG Map & GeoJSON](#interactive-svg-map--geojson)
 - [Historical Eras (48, 58, 69)](#historical-eras-48-58-69)
 - [Data Distributions (JSON, CSV, SQL)](#data-distributions)
 - [Data Source & Provenance](#data-source--provenance)
@@ -64,6 +65,7 @@
 - 🔍 **Cross-Script Fuzzy Search**: Intelligent search folding Arabic diacritics/tashkeel, French accents, letter variants, and phonetic transliterations (`Warqla` = `Ouargla` = `ورقلة`).
 - ⚡ **Zero Runtime Dependencies**: Pure standard library implementation with instant in-memory $O(1)$ dictionary lookups.
 - 📦 **Dual Ecosystem Parity**: Identical feature set, function names, and performance in both **TypeScript** (ESM + CommonJS) and **Python** (Typed).
+- 🗺️ **Vector SVG Map & GeoJSON**: Clickable, semantic SVG map with 69 wilayas (`data-code`, `data-name-ar`, `data-name-fr`) and GeoJSON polygons for Leaflet/Mapbox/D3.
 - 🗄️ **Multi-Format Exports**: Ready-to-import SQL dumps (PostgreSQL, SQLite, MySQL / MariaDB), minified JSON, hierarchical tree, and UTF-8 CSVs.
 
 ---
@@ -223,6 +225,75 @@ dropdown = geo.to_dropdown_options(lang="fr")
 | `search(query, lang, limit)` | `search(query, langOrOptions, limit)` | Multi-lingual fuzzy search across all divisions |
 | `get_postal_code(name, wilaya)` | `getPostalCode(name, wilaya)` | Look up postal code (when populated) |
 | `to_dropdown_options(lang, era)` | `toDropdownOptions(lang, era)` | Prepare `{ value, label }` options for HTML selects |
+| `get_map_svg(era=69, ...)` | `getMapSvg(options?)` | Generate standalone SVG map of Algeria |
+| `get_wilaya_svg_path(code)` | `getWilayaSvgPath(code)` | Return SVG path geometry for a wilaya (`d` attribute) |
+| `WILAYA_SVG_PATHS` | `WILAYA_SVG_PATHS` | Dictionary/Record mapping wilaya code to SVG path `d` |
+
+---
+
+## Interactive SVG Map & GeoJSON
+
+`algeria-geo` includes a precision vector map (Web Mercator projection) covering all **69 wilayas**, with matching boundaries and semantic attributes (`id="wilaya-XX"`, `data-code="XX"`, `data-name-ar`, `data-name-fr`, `data-phone-code`, `data-era`, `data-dairas`, `data-communes`).
+
+### Pre-Built Vector Distributions
+
+Located in [`dist/maps/`](dist/maps/):
+
+- [`dist/maps/algeria-69.svg`](dist/maps/algeria-69.svg): Clean, responsive SVG with default styles and hover effects.
+- [`dist/maps/algeria-69.min.svg`](dist/maps/algeria-69.min.svg): Minified SVG for production web applications and delivery dashboards.
+- [`dist/maps/algeria-69.geojson`](dist/maps/algeria-69.geojson): GeoJSON polygons compatible with Leaflet, Mapbox, D3, and QGIS.
+
+### TypeScript / JavaScript Usage
+
+```typescript
+import { getMapSvg, getWilayaSvgPath, WILAYA_SVG_PATHS } from "algeria-geo";
+// Subpath import also supported:
+// import { getMapSvg } from "algeria-geo/map";
+
+// 1. Generate full SVG string (supports era: 48, 58, 69)
+const svg = getMapSvg({ era: 69 });
+
+// 2. Or query path geometry for a wilaya
+const algerPath = getWilayaSvgPath(16); // "M5752 253l6-1..."
+```
+
+### React / Next.js Component Example
+
+```tsx
+import { getWilayas, WILAYA_SVG_PATHS } from "algeria-geo";
+
+export function AlgeriaMap({ onSelect }: { onSelect: (code: string) => void }) {
+  const wilayas = getWilayas();
+
+  return (
+    <svg viewBox="0 0 10000 9999" width="100%" height="100%">
+      {wilayas.map((w) => (
+        <path
+          key={w.code}
+          id={`wilaya-${w.code}`}
+          d={WILAYA_SVG_PATHS[w.code]}
+          className="fill-slate-200 stroke-white stroke-[1.5] hover:fill-emerald-500 cursor-pointer transition-colors"
+          onClick={() => onSelect(w.code)}
+        >
+          <title>{w.name_ar} - {w.name_fr}</title>
+        </path>
+      ))}
+    </svg>
+  );
+}
+```
+
+### Python Usage
+
+```python
+import algeria_geo as geo
+
+# 1. Generate standalone SVG map string
+svg_map = geo.get_map_svg(era=69)
+
+# 2. Extract path geometry for any wilaya
+alger_d = geo.get_wilaya_svg_path(16)
+```
 
 ---
 
@@ -247,7 +318,15 @@ communes_69 = geo.get_communes("59", era=69)
 ```
 
 ---
+## Star History
 
+<a href="https://www.star-history.com/?repos=test-bit-sys%2Falgeria-geo&type=date&legend=top-left">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=test-bit-sys/algeria-geo&type=date&theme=dark&legend=top-left" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=test-bit-sys/algeria-geo&type=date&legend=top-left" />
+   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=test-bit-sys/algeria-geo&type=date&legend=top-left" />
+ </picture>
+</a>
 ## Data Distributions
 
 Pre-built distribution files are located in the [`dist/`](dist/) folder:
@@ -261,6 +340,9 @@ Pre-built distribution files are located in the [`dist/`](dist/) folder:
 | [`dist/csv/*.csv`](dist/csv/) | CSV | UTF-8 with BOM CSV exports for Excel and data pipelines |
 | [`dist/algeria_geo.sql`](dist/algeria_geo.sql) | SQL | Ready-to-run DDL and INSERT statements for PostgreSQL & SQLite |
 | [`dist/algeria_geo.mysql.sql`](dist/algeria_geo.mysql.sql) | SQL | Optimized SQL script for MySQL 8 and MariaDB (`utf8mb4`) |
+| [`dist/maps/algeria-69.svg`](dist/maps/algeria-69.svg) | SVG | Vector SVG map with all 69 wilayas and semantic data attributes |
+| [`dist/maps/algeria-69.min.svg`](dist/maps/algeria-69.min.svg) | SVG | Minified SVG map for fast frontend loading |
+| [`dist/maps/algeria-69.geojson`](dist/maps/algeria-69.geojson) | GeoJSON | Polygons in Web Mercator / WGS84 for Leaflet, Mapbox, D3 & QGIS |
 
 ---
 
@@ -277,6 +359,9 @@ The administrative boundaries, nomenclature, postal codes, and coordinates in **
 
 3. **OpenStreetMap Data (ODbL 1.0):**
    - 323 of the 1,541 commune coordinates are derived from OpenStreetMap administrative relations via GeoAlgeria and are made available under the [Open Database License (ODbL) 1.0](https://opendatacommons.org/licenses/odbl/1-0/): **© OpenStreetMap contributors**.
+
+4. **Vector SVG & GeoJSON Boundaries:**
+   - Wilaya boundary geometries and vector coordinates are derived from OpenStreetMap administrative relations via the [Algeria69WilayaMap](https://github.com/chemsallioua/Algeria69WilayaMap) project, licensed under the **MIT License**. Boundaries © OpenStreetMap contributors under ODbL 1.0.
 
 See [NOTICE](NOTICE) and [LICENSE](LICENSE) for full details.
 

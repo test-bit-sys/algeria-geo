@@ -320,3 +320,7 @@ export function toDropdownOptions(lang: Lang = "ar", era: Era = 69): DropdownOpt
   const key = `name_${lang}` as const;
   return getWilayas(era).map((w) => ({ value: w.code, label: w[key] }));
 }
+
+export { getMapSvg, getWilayaSvgPath, WILAYA_SVG_PATHS } from "./map.js";
+export type { MapSvgOptions } from "./map.js";
+

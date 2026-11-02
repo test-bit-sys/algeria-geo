@@ -16,6 +16,9 @@ import {
   getWilayas,
   search,
   toDropdownOptions,
+  getMapSvg,
+  getWilayaSvgPath,
+  WILAYA_SVG_PATHS,
 } from "../dist/esm/index.js";
 
 test("lookup by code and name", () => {
@@ -111,3 +114,30 @@ test("postal codes and coordinates", () => {
   assert.ok(typeof c?.latitude === "number" && c.latitude > 35);
   assert.ok(typeof c?.longitude === "number" && c.longitude > 2);
 });
+
+test("svg map and wilaya paths", () => {
+  assert.equal(Object.keys(WILAYA_SVG_PATHS).length, 69);
+  assert.ok(getWilayaSvgPath("16")?.startsWith("M"));
+  assert.ok(getWilayaSvgPath(16)?.startsWith("M"));
+  assert.equal(getWilayaSvgPath("99"), null);
+
+  const svg69 = getMapSvg();
+  assert.ok(svg69.includes('id="algeria-map"'));
+  assert.ok(svg69.includes('id="wilaya-16"'));
+  assert.ok(svg69.includes('id="wilaya-69"'));
+  assert.equal((svg69.match(/<path /g) || []).length, 69);
+
+  const svg58 = getMapSvg({ era: 58 });
+  assert.equal((svg58.match(/<path /g) || []).length, 58);
+  assert.ok(!svg58.includes('id="wilaya-59"'));
+
+  const svg48 = getMapSvg({ era: 48 });
+  assert.equal((svg48.match(/<path /g) || []).length, 48);
+  assert.ok(!svg48.includes('id="wilaya-49"'));
+
+  const customSvg = getMapSvg({ className: "custom-wilaya", width: 800, height: 600, includeStyles: false });
+  assert.ok(customSvg.includes('class="custom-wilaya"'));
+  assert.ok(customSvg.includes('width="800"'));
+  assert.ok(!customSvg.includes('<style>'));
+});
+

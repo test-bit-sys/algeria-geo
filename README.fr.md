@@ -48,6 +48,7 @@
   - [TypeScript / JavaScript](#typescript--javascript)
   - [Python](#python)
 - [Référence de l'API](#référence-de-lapi)
+- [Carte vectorielle SVG et GeoJSON](#carte-vectorielle-svg-et-geojson)
 - [Découpages historiques (48, 58, 69)](#découpages-historiques-48-58-69)
 - [Distributions prêtes à l'emploi (JSON, CSV, SQL)](#distributions-prêtes-à-lemploi)
 - [Source des données et citations](#source-des-données-et-citations)
@@ -64,6 +65,7 @@
 - 🔍 **Recherche floue et phonétique** : Recherche tolérante aux accents, diacritiques arabes (tashkeel), variantes de lettres et translittérations (`Warqla` = `Ouargla` = `ورقلة`).
 - ⚡ **Zéro dépendance d'exécution** : Implémentation basée sur les bibliothèques standard, ultra-légère avec recherches en mémoire instantanées en $O(1)$.
 - 📦 **Parité absolue des écosystèmes** : Mêmes signatures, modèles et performances en **TypeScript** (ESM + CommonJS) et **Python** (strictement typé).
+- 🗺️ **Carte vectorielle SVG et GeoJSON** : Carte interactive des 69 wilayas avec attributs sémantiques (`data-code`, `data-name-ar`, `data-name-fr`) pour CSS/JS et polygones GeoJSON.
 - 🗄️ **Exports multi-formats** : Fichiers SQL prêts à l'emploi (PostgreSQL, SQLite, MySQL / MariaDB), JSON minifiés, arborescence hiérarchique et CSV UTF-8.
 
 ---
@@ -223,6 +225,73 @@ dropdown = geo.to_dropdown_options(lang="fr")
 | `search(query, lang, limit)` | `search(query, langOrOptions, limit)` | Recherche floue multilingue sur toutes les divisions |
 | `get_postal_code(name, wilaya)` | `getPostalCode(name, wilaya)` | Recherche le code postal (lorsque renseigné) |
 | `to_dropdown_options(lang, era)` | `toDropdownOptions(lang, era)` | Prépare les options `{ value, label }` pour selects HTML |
+| `get_map_svg(era=69, ...)` | `getMapSvg(options?)` | Génère la chaîne complète de la carte SVG de l'Algérie |
+| `get_wilaya_svg_path(code)` | `getWilayaSvgPath(code)` | Renvoie la géométrie vectorielle (`d`) d'une wilaya |
+| `WILAYA_SVG_PATHS` | `WILAYA_SVG_PATHS` | Dictionnaire associant chaque code de wilaya à son tracé SVG |
+
+---
+
+## Carte vectorielle SVG et GeoJSON
+
+`algeria-geo` intègre une carte vectorielle de haute précision (projection Web Mercator) couvrant l'ensemble des **69 wilayas**, avec des frontières alignées et des attributs sémantiques complets (`id="wilaya-XX"`, `data-code="XX"`, `data-name-ar`, `data-name-fr`, `data-phone-code`, etc.).
+
+### Fichiers disponibles dans [`dist/maps/`](dist/maps/) :
+
+- [`dist/maps/algeria-69.svg`](dist/maps/algeria-69.svg) : SVG autonome et responsive avec styles CSS de survol intégrés.
+- [`dist/maps/algeria-69.min.svg`](dist/maps/algeria-69.min.svg) : Version minifiée optimisée pour les applications web rapides.
+- [`dist/maps/algeria-69.geojson`](dist/maps/algeria-69.geojson) : Polygones géographiques compatibles avec Leaflet, Mapbox, D3 et QGIS.
+
+### Utilisation en TypeScript / JavaScript
+
+```typescript
+import { getMapSvg, getWilayaSvgPath, WILAYA_SVG_PATHS } from "algeria-geo";
+// Import direct via sous-chemin également disponible :
+// import { getMapSvg } from "algeria-geo/map";
+
+// 1. Générer le SVG complet (compatible époques : 48, 58, 69)
+const svg = getMapSvg({ era: 69 });
+
+// 2. Ou récupérer le tracé d'une wilaya pour React / Vue / Svelte
+const algerPath = getWilayaSvgPath(16); // "M5752 253l6-1..."
+```
+
+### Exemple de composant React / Next.js
+
+```tsx
+import { getWilayas, WILAYA_SVG_PATHS } from "algeria-geo";
+
+export function AlgeriaMap({ onSelect }: { onSelect: (code: string) => void }) {
+  const wilayas = getWilayas();
+
+  return (
+    <svg viewBox="0 0 10000 9999" width="100%" height="100%">
+      {wilayas.map((w) => (
+        <path
+          key={w.code}
+          id={`wilaya-${w.code}`}
+          d={WILAYA_SVG_PATHS[w.code]}
+          className="fill-slate-200 stroke-white stroke-[1.5] hover:fill-emerald-500 cursor-pointer transition-colors"
+          onClick={() => onSelect(w.code)}
+        >
+          <title>{w.name_ar} - {w.name_fr}</title>
+        </path>
+      ))}
+    </svg>
+  );
+}
+```
+
+### Utilisation en Python
+
+```python
+import algeria_geo as geo
+
+# 1. Générer la carte SVG complète
+svg_map = geo.get_map_svg(era=69)
+
+# 2. Récupérer le tracé vectoriel d'une wilaya
+alger_d = geo.get_wilaya_svg_path(16)
+```
 
 ---
 
@@ -261,6 +330,9 @@ Les distributions générées se trouvent dans le dossier [`dist/`](dist/) :
 | [`dist/csv/*.csv`](dist/csv/) | CSV | Exports CSV en UTF-8 avec BOM (compatible Excel) |
 | [`dist/algeria_geo.sql`](dist/algeria_geo.sql) | SQL | Script DDL et INSERT prêt pour PostgreSQL et SQLite |
 | [`dist/algeria_geo.mysql.sql`](dist/algeria_geo.mysql.sql) | SQL | Script optimisé pour MySQL 8 et MariaDB (`utf8mb4`) |
+| [`dist/maps/algeria-69.svg`](dist/maps/algeria-69.svg) | SVG | Carte vectorielle des 69 wilayas avec attributs sémantiques |
+| [`dist/maps/algeria-69.min.svg`](dist/maps/algeria-69.min.svg) | SVG | Version SVG minifiée optimisée pour les applications web |
+| [`dist/maps/algeria-69.geojson`](dist/maps/algeria-69.geojson) | GeoJSON | Polygones WGS84 pour Leaflet, Mapbox, D3 et QGIS |
 
 ---
 
@@ -277,6 +349,9 @@ Les limites administratives, la nomenclature, les codes postaux et les coordonn�
 
 3. **Données OpenStreetMap (ODbL 1.0) :**
    - 323 des 1 541 coordonnées communales sont dérivées des relations OpenStreetMap via GeoAlgeria et sont mises à disposition sous licence [Open Database License (ODbL) 1.0](https://opendatacommons.org/licenses/odbl/1-0/) : **© les contributeurs d'OpenStreetMap**.
+
+4. **Cartes vectorielles et limites (SVG et GeoJSON) :**
+   - Les géométries des wilayas sont dérivées des relations OpenStreetMap via le projet [Algeria69WilayaMap](https://github.com/chemsallioua/Algeria69WilayaMap), sous licence **MIT**. Données de limites © les contributeurs d'OpenStreetMap sous licence ODbL 1.0.
 
 Consultez [NOTICE](NOTICE) et [LICENSE](LICENSE) pour plus de détails.
 

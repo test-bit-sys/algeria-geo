@@ -2,6 +2,7 @@
 dist/
 packages/node/dist/
 packages/node/src/data.ts
+packages/node/src/map-data.ts
 packages/python/src/algeria_geo/data/
 *.egg-info/
 build/

@@ -247,7 +247,15 @@ communes_69 = geo.get_communes("59", era=69)
 ```
 
 ---
+## Star History
 
+<a href="https://www.star-history.com/?repos=test-bit-sys%2Falgeria-geo&type=date&legend=top-left">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=test-bit-sys/algeria-geo&type=date&theme=dark&legend=top-left" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=test-bit-sys/algeria-geo&type=date&legend=top-left" />
+   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=test-bit-sys/algeria-geo&type=date&legend=top-left" />
+ </picture>
+</a>
 ## Data Distributions
 
 Pre-built distribution files are located in the [`dist/`](dist/) folder:

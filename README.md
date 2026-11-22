@@ -114,6 +114,13 @@ uv add algeria-geo
 poetry add algeria-geo
 ```
 
+### Excel & Access (Direct Download)
+
+For office workflows, administrative analysis, and relational databases without coding:
+
+- 📊 **[algeria_geo_69_wilayas.xlsx](https://github.com/test-bit-sys/algeria-geo/raw/main/exports/algeria_geo_69_wilayas.xlsx)** — Formatted Excel workbook with 4 sheets: Comprehensive Flat Table (Wilaya + Daïra + Commune with postal codes & coordinates), 69 Wilayas, 538 Daïras, and 1,541 Communes.
+- 📄 **[algeria_complete.csv](https://github.com/test-bit-sys/algeria-geo/raw/main/exports/algeria_complete.csv)** — Full UTF-8 (with BOM) CSV dataset that opens seamlessly in Microsoft Excel without Arabic character encoding issues.
+
 ---
 
 ## Quick Start

@@ -116,6 +116,13 @@ uv add algeria-geo
 poetry add algeria-geo
 ```
 
+### إكسل وقواعد البيانات (تحميل مباشر بدون برمجة)
+
+للاستخدام الإداري والمكتبي المباشر في برامج **Microsoft Excel** و **Access**:
+
+- 📊 **[تحميل ملف Excel الشامل (algeria_geo_69_wilayas.xlsx)](https://github.com/test-bit-sys/algeria-geo/raw/main/exports/algeria_geo_69_wilayas.xlsx)** — مصنف إكسل منسق وجاهز يحتوي على 4 أوراق عمل (جدول شامل يجمع الولاية والدائرة والبلدية مع الرمز البريدي والإحداثيات، إضافة إلى أوراق منفصلة للولايات الـ 69، الدوائر الـ 538، والبلديات الـ 1,541).
+- 📄 **[تحميل ملف CSV الشامل (algeria_complete.csv)](https://github.com/test-bit-sys/algeria-geo/raw/main/exports/algeria_complete.csv)** — ملف CSV بترميز UTF-8 مع BOM يفتح مباشرة في برنامج Excel دون مشاكل في تشفير الحروف العربية.
+
 ---
 
 ## أمثلة الاستخدام السريع

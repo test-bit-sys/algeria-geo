@@ -120,8 +120,10 @@ poetry add algeria-geo
 
 للاستخدام الإداري والمكتبي المباشر في برامج **Microsoft Excel** و **Access**:
 
+- 🟢 **[تحميل جدول البلديات المبسط 69 ولاية (algeria_communes_69_simple.xlsx)](https://github.com/test-bit-sys/algeria-geo/raw/main/exports/algeria_communes_69_simple.xlsx)** — **جدول مبسط ومرتب حسب أرقام الولايات من 01 إلى 69** يحتوي على الأعمدة: (`البلدية` | `Commune` | `الرمز البريدي` | `الولاية` | `رقم الولاية`).
 - 📊 **[تحميل ملف Excel الشامل (algeria_geo_69_wilayas.xlsx)](https://github.com/test-bit-sys/algeria-geo/raw/main/exports/algeria_geo_69_wilayas.xlsx)** — مصنف إكسل منسق وجاهز يحتوي على 4 أوراق عمل (جدول شامل يجمع الولاية والدائرة والبلدية مع الرمز البريدي والإحداثيات، إضافة إلى أوراق منفصلة للولايات الـ 69، الدوائر الـ 538، والبلديات الـ 1,541).
-- 📄 **[تحميل ملف CSV الشامل (algeria_complete.csv)](https://github.com/test-bit-sys/algeria-geo/raw/main/exports/algeria_complete.csv)** — ملف CSV بترميز UTF-8 مع BOM يفتح مباشرة في برنامج Excel دون مشاكل في تشفير الحروف العربية.
+- 📄 **[تحميل ملف CSV المبسط (algeria_communes_69_simple.csv)](https://github.com/test-bit-sys/algeria-geo/raw/main/exports/algeria_communes_69_simple.csv)** — ملف CSV خفيف ومبسط بترميز UTF-8 مع BOM يفتح مباشرة في Excel.
+- 📄 **[تحميل ملف CSV الشامل (algeria_complete.csv)](https://github.com/test-bit-sys/algeria-geo/raw/main/exports/algeria_complete.csv)** — ملف CSV شامل بترميز UTF-8 مع BOM يفتح مباشرة في برنامج Excel دون مشاكل في تشفير الحروف العربية.
 
 ---
 

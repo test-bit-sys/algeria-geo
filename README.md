@@ -118,7 +118,9 @@ poetry add algeria-geo
 
 For office workflows, administrative analysis, and relational databases without coding:
 
-- 📊 **[algeria_geo_69_wilayas.xlsx](https://github.com/test-bit-sys/algeria-geo/raw/main/exports/algeria_geo_69_wilayas.xlsx)** — Formatted Excel workbook with 4 sheets: Comprehensive Flat Table (Wilaya + Daïra + Commune with postal codes & coordinates), 69 Wilayas, 538 Daïras, and 1,541 Communes.
+- 🟢 **[algeria_communes_69_simple.xlsx](https://github.com/test-bit-sys/algeria-geo/raw/main/exports/algeria_communes_69_simple.xlsx)** — **Simplified 4-column table** (`البلدية` | `Commune` | `الرمز البريدي` | `الولاية` | `رقم الولاية`) across all **69 Wilayas**, sorted logically from Wilaya 01 to Wilaya 69.
+- 📊 **[algeria_geo_69_wilayas.xlsx](https://github.com/test-bit-sys/algeria-geo/raw/main/exports/algeria_geo_69_wilayas.xlsx)** — Complete Excel workbook with 4 sheets: Comprehensive Flat Table (Wilaya + Daïra + Commune with postal codes & coordinates), 69 Wilayas, 538 Daïras, and 1,541 Communes.
+- 📄 **[algeria_communes_69_simple.csv](https://github.com/test-bit-sys/algeria-geo/raw/main/exports/algeria_communes_69_simple.csv)** — Clean CSV version of the simplified table (UTF-8 with BOM).
 - 📄 **[algeria_complete.csv](https://github.com/test-bit-sys/algeria-geo/raw/main/exports/algeria_complete.csv)** — Full UTF-8 (with BOM) CSV dataset that opens seamlessly in Microsoft Excel without Arabic character encoding issues.
 
 ---
